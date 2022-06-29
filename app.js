@@ -23,7 +23,7 @@ app.use(morgan("tiny"));
 app.use(express.json());
 
 //apples
-app.use("/api/v1/auth",authRouter);
+app.use(process.env.BASE_URL + "/auth",authRouter);
 
 
 app.use(notFoundMiddleware);
