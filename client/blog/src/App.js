@@ -4,8 +4,14 @@ import axios from "axios";
 
 
 export default function App() {
+  const [users,setUsers] = useState();
+
   const fetchUsers = () => {
-    return axios.get("http://localhost:3000/users").then((res) => console.log(res.data));
+    return fetch('http://localhost:3000/api/v1/users')
+        .then(response => response.json()).then(response => {
+          console.log(response)
+          setUsers(response.users);
+        }).catch(err => console.log(err));
   };
 
   useEffect(() => {
@@ -14,7 +20,9 @@ export default function App() {
 
   return (
     <div>
-      <h1>Hello World</h1>
+      {users && users.map((user) => (
+        <h1 key={user._id}>{user.name}</h1>
+      ))}
     </div>
   );
 }
