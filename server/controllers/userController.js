@@ -17,7 +17,7 @@ const getUser = async (req,res) => {
         throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
     }
     res.status(StatusCodes.OK).json({
-        users : user, 
+        user : user, 
         msg : "İşlem başarılı",
     });
 }
