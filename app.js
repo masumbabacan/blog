@@ -14,6 +14,7 @@ const connectDB = require("./db/connect");
 
 //routers
 const authRouter = require("./routes/authRoutes");
+const userRouter = require("./routes/userRoutes");
 
 
 //middleware
@@ -26,6 +27,7 @@ app.use(cookieParser(process.env.JWT_SECRET));
 
 //apples
 app.use("/api/v1/auth",authRouter);
+app.use("/api/v1/user",userRouter);
 
 
 app.use(notFoundMiddleware);
