@@ -1,8 +1,9 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const { findOneAndUpdate, create } = require("../models/User");
 const {createTokenUser,attachCookiesToResponse} = require("../utils");
+
+
 
 const getAllUsers = async (req,res) => {
     console.log(req.user);
@@ -37,9 +38,7 @@ const updateUser = async (req,res) => {
     const user = await User.findOneAndUpdate({_id : req.user.userId},{email,name},{new:true,runValidators:true});
     const tokenUser = createTokenUser(user);
     attachCookiesToResponse({res,user:tokenUser});
-    res.status(StatusCodes.OK).json({user : tokenUser});
-
-
+    res.status(StatusCodes.OK).json({user : tokenUser,msg : "İşlem başarılı"});
 }
 
 const updateUserPassword = async (req,res) => {

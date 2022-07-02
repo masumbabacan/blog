@@ -6,8 +6,8 @@ const UserSchema = new mongoose.Schema({
     name : {
         type : String,
         required : [true,"Lütfen isim giriniz"],
-        minLength : 3,
-        maxLength : 50
+        minLength : [2,"isim en az 2 karakter olmalıdır"],
+        maxLength : [50,"isim en fazla 50 karakter olmalıdır"]
     },
     email : {
         type : String,
