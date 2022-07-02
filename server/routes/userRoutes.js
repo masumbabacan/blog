@@ -29,7 +29,6 @@ router.route("/updateUserPassword").patch(
 router.route("/updateUser").patch(
     cors(),
     authenticateUser,
-    authorizePermissions('admin','owner','developer'),
     updateUser
 );
 
