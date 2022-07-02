@@ -24,15 +24,26 @@ const getUser = async (req,res) => {
 }
 
 const showCurrentUser = async (req,res) => {
-    res.send(req.params);
+    res.status(StatusCodes.OK).json({user : req.user});
+}
+
+const updateUserPassword = async (req,res) => {
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+        throw new CustomError.BadRequestError("Lütfen alanları doldurunuz");
+    }
+    const user = await User.findOne({_id : req.user.userId});
+    const isPasswordCorrect = await user.comparePassword(oldPassword);
+    if (!isPasswordCorrect) {
+        throw new CustomError.UnauthenticatedError("Geçersiz kimlik bilgileri");
+    }
+    user.password = newPassword;
+    await user.save();
+    res.status(StatusCodes.OK).json({msg : "Şifre başarıyla güncellendi"});
 }
 
 const updateUser = async (req,res) => {
     res.send("update user");
-}
-
-const updateUserPassword = async (req,res) => {
-    res.send("update user password");
 }
 
 module.exports = {

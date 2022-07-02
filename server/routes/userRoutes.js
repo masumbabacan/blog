@@ -17,28 +17,26 @@ router.route("/").get(
 router.route("/showMe").get(
     cors(),
     authenticateUser,
-    authorizePermissions,
     showCurrentUser
-);
-
-router.route("/updateUser").patch(
-    cors(),
-    authenticateUser,
-    authorizePermissions,
-    updateUser
 );
 
 router.route("/updateUserPassword").patch(
     cors(),
     authenticateUser,
-    authorizePermissions,
     updateUserPassword
+);
+
+router.route("/updateUser").patch(
+    cors(),
+    authenticateUser,
+    authorizePermissions('admin','owner','developer'),
+    updateUser
 );
 
 router.route("/:id").get(
     cors(),
     authenticateUser,
-    authorizePermissions,
+    authorizePermissions('admin','owner','developer'),
     getUser
 );
 
