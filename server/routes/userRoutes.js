@@ -35,7 +35,6 @@ router.route("/updateUser").patch(
 router.route("/:id").get(
     cors(),
     authenticateUser,
-    authorizePermissions('admin','owner','developer'),
     getUser
 );
 

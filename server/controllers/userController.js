@@ -1,12 +1,9 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const {createTokenUser,attachCookiesToResponse} = require("../utils");
-
-
+const {createTokenUser,attachCookiesToResponse,checkPermissions} = require("../utils");
 
 const getAllUsers = async (req,res) => {
-    console.log(req.user);
     const users = await User.find({role:"user"}).select('-password');
     res.status(StatusCodes.OK).json({
         users : users, 
@@ -20,6 +17,8 @@ const getUser = async (req,res) => {
     if (!user) {
         throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
     }
+    console.log(req.user)
+    checkPermissions(req.user,user._id);
     res.status(StatusCodes.OK).json({
         user : user, 
         msg : "İşlem başarılı",
