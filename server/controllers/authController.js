@@ -1,8 +1,9 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const { attachCookiesToResponse, createTokenUser } = require("../utils/index");
+const { attachCookiesToResponse, createTokenUser, sendVerificationEmail } = require("../utils/index");
 const crypto = require('crypto');
+const sendEmail = require('../utils/sendEmail');
 
 const register = async (req,res) => {
     const { email, name, surname, password } = req.body;
@@ -12,6 +13,16 @@ const register = async (req,res) => {
     }
     const verificationToken = crypto.randomBytes(40).toString('hex');
     const user = await User.create({name,surname,email,password,verificationToken});
+
+    const origin = 'http://localhost:3000/api/v1/auth';
+
+    await sendVerificationEmail({
+        name : user.name,
+        email : user.email,
+        verificationToken : user.verificationToken,
+        origin : origin,
+    })
+
     res.status(StatusCodes.CREATED).json({msg : "İşlem başarılı! Lütfen hesabınızı doğrulamak için e-postanızı kontrol edin"});
 }
 
