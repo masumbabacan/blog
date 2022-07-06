@@ -3,7 +3,6 @@ const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const { attachCookiesToResponse, createTokenUser, sendVerificationEmail } = require("../utils/index");
 const crypto = require('crypto');
-const sendEmail = require('../utils/sendEmail');
 
 const register = async (req,res) => {
     const { email, name, surname, password } = req.body;
@@ -30,10 +29,10 @@ const verifyEmail = async (req,res) => {
     const {verificationToken,email} = req.body;
     const user = await User.findOne({email});
     if (!user || user.verificationToken !== verificationToken) {
-        throw new CustomError.UnauthenticatedError("Doğrulama başarısız oldu");
+        throw new CustomError.UnauthenticatedError("Doğrulama esnasında hata oluştu!");
     }
     await User.findOneAndUpdate({_id : user._id},{isVerified : true, verified : Date.now(),verificationToken : ''});
-    res.status(StatusCodes.OK).json({msg : 'Email doğrulaması başarılı!'});
+    res.status(StatusCodes.OK).json({msg : 'E-posta başarıyla doğrulandı'});
 }
 
 const login = async (req,res) => {
