@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Token = require("../models/Token");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const { attachCookiesToResponse, createTokenUser, sendVerificationEmail } = require("../utils/index");
@@ -55,12 +56,36 @@ const login = async (req,res) => {
         throw new CustomError.UnauthenticatedError("Lütfen email adresinizi doğrulayın");
     }
     const tokenUser = createTokenUser(user);
-    attachCookiesToResponse({res,user:tokenUser});
+    let refreshToken = '';
+
+    const existingToken = await Token.findOne({ user : user._id });
+    if (existingToken) {
+        const {isValid} = existingToken;
+        if (!isValid) {
+            throw new CustomError.UnauthenticatedError("geçersiz kimlik bilgileri");
+        }
+        refreshToken = existingToken.refreshToken;
+        attachCookiesToResponse({res,user:tokenUser,refreshToken});
+        res.status(StatusCodes.OK).json({user:tokenUser});
+        return;
+    }
+
+    refreshToken = crypto.randomBytes(40).toString('hex');
+    const userAgent = req.headers['user-agent'];
+    const ip = req.ip;
+    const userToken = {refreshToken,ip,userAgent,user:user._id};
+    await Token.create(userToken);
+    attachCookiesToResponse({res,user:tokenUser,refreshToken});
     res.status(StatusCodes.OK).json({user:tokenUser});
 }
 
 const logout = async (req,res) => {
-    res.cookie("token","logout",{
+    await Token.findOneAndDelete({user:req.user.userId});
+    res.cookie("accessToken","logout",{
+        httpOnly : true,
+        expires : new Date(Date.now()),
+    });
+    res.cookie("refreshToken","logout",{
         httpOnly : true,
         expires : new Date(Date.now()),
     });

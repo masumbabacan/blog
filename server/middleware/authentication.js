@@ -1,16 +1,33 @@
 const CustomError = require("../errors");
+const Token = require("../models/Token");
 const { isTokenValid } = require("../utils");
-
+const { attachCookiesToResponse, createTokenUser, sendVerificationEmail } = require("../utils/index");
 const authenticateUser = async (req,res,next) => {
-    const token = req.signedCookies.token;
-    if (!token) {
-        throw new CustomError.UnauthenticatedError("Geçersiz kimlik");
-    }
+    const {refreshToken, accessToken} = req.signedCookies;
 
     try {
-        const {name,userId,role} = isTokenValid({ token });
-        req.user = { name, userId, role };
+        if (accessToken) {
+            const payload = isTokenValid(accessToken);
+            req.user = payload.user;
+            return next();
+        }
+        const payload = isTokenValid(refreshToken);
+
+        const existingToken = await Token.findOne({
+            user: payload.user.userId,
+            refreshToken : payload.refreshToken
+        });
+
+        if (!existingToken || !existingToken?.isValid) {
+            throw new CustomError.UnauthenticatedError("Geçersiz kimlik");
+        }
+        req.user = payload.user;
+        attachCookiesToResponse({
+            res,user:payload.user,
+            refreshToken:existingToken.refreshToken,
+        });
         next();
+
     } catch (error) {
         throw new CustomError.UnauthenticatedError("Geçersiz kimlik");
     }
