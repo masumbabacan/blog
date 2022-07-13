@@ -1,0 +1,46 @@
+.login-container{
+    width: 100%;
+    height: 100vh;
+    background-image: url('../images/login-bg-img.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-operations{
+    background-color: #ffffff;
+    border: 3px solid #581F18;
+    text-align: center;
+    width: 30%;
+    height: 60vh;
+    border-radius: 10px;
+    padding: 50px;
+}
+.login-operations .login{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin: 40px auto;
+}
+.login-operations .login a{
+    margin-top: 15px;
+}
+
+.login-operations input, .login-operations button{
+    width: 100%;
+    height: 28px;
+    border: 1px solid #000;
+    margin: 10px 0;
+    padding-left: 10px;
+}
+
+.login-operations button{
+    margin-top: 30%;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    background-image: linear-gradient(to right top, #b34137, #ba4842, #c14f4d, #c85757, #ce5e62);
+    color: #ffffff;
+}
