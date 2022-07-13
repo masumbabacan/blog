@@ -33,9 +33,8 @@ app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
 app.use(function (req, res, next) {
-
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     
     
     // Request headers you wish to allow
