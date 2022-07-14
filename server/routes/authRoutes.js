@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express();
 const {authenticateUser} = require("../middleware/authentication")
-const cors = require('cors');
 
 const { register,login,logout,verifyEmail,forgotPassword,resetPassword } = 
 require("../controllers/authController");

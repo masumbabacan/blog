@@ -4,7 +4,7 @@ const {authenticateUser,authorizePermissions} = require("../middleware/authentic
 const { createBlog, getAllBlogs, getBlog } = 
 require("../controllers/blogController");
 
-router.route('/').get(getAllBlogs);
+router.route('/').get(authorizePermissions('admin'),getAllBlogs);
 router.route('/:id').get(getBlog);
 router.route('/').post(authenticateUser,authorizePermissions('user','admin'),createBlog);
 // router.route('/').patch();
