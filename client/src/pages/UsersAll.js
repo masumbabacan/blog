@@ -1,35 +1,22 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
-
+import axios from 'axios'
 
 
 export default function UsersAll() {
-    const [users,setUsers] = useState();
-    const [errors,setErrors] = useState();
+  const [post, setPost] = React.useState(null);
+  React.useEffect(() => {
+    axios.get('http://localhost:3000/api/v1/users').then((response) => {
+      setPost(response.data);
+      console.log(response);
+    });
+  }, []);
 
-    const fetchUsers = () => {
-        return fetch('http://localhost:3000/api/v1/users')
-            .then(response => response.json())
-            .then(response => {
-              setErrors(response.msg);
-            })
-            .then(response => {
-              setUsers(response.users);
-            }).catch(err => console.log(err));
-            
-      };
-    
-      useEffect(() => {
-        fetchUsers();
-      }, []);
-    
+  if (!post) return null;
+
   return (
     <div>
-      {users && users.map((user) => (
-        <h1 key={user._id}>{user.name}</h1>
-      ))}
-
-    {errors}
+       <h1>{post.name}</h1>
+      <p>{post.email}</p>
     </div>
   )
 }

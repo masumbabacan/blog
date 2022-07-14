@@ -22,12 +22,12 @@ const Login = () => {
             password: password
         })
         .then((response) =>{
+            alert(response.data.msg);
             console.log(response.data);
-            alert("giriş başarılı");
         })
         .catch((err)=>{
-            console.log(err)
             console.log(err.response)
+            alert(err.response.data.msg)
         })
     }
 
