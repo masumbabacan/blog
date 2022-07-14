@@ -11,27 +11,7 @@ const cookieParser = require("cookie-parser");
 //database
 const connectDB = require("./db/connect");
 
-//routers
-const authRouter = require("./routes/authRoutes");
-const userRouter = require("./routes/userRoutes");
-
-
-//middleware
-const notFoundMiddleware = require("./middleware/not-found");
-const errorHandlerMiddleware = require("./middleware/error-handler");
-
-app.use(morgan("tiny"));
-app.use(express.json());
-app.use(cookieParser(process.env.JWT_SECRET));
-
-//apples
-app.use("/api/v1/auth",authRouter);
-app.use("/api/v1/users",userRouter);
-
-
-app.use(notFoundMiddleware);
-app.use(errorHandlerMiddleware);
-
+//allow origin
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -45,6 +25,28 @@ app.use(function (req, res, next) {
     next();
 });
 
+//routers
+const authRouter = require("./routes/authRoutes");
+const userRouter = require("./routes/userRoutes");
+const blogRouter = require("./routes/blogRoutes");
+
+
+//middleware
+const notFoundMiddleware = require("./middleware/not-found");
+const errorHandlerMiddleware = require("./middleware/error-handler");
+
+app.use(morgan("tiny"));
+app.use(express.json());
+app.use(cookieParser(process.env.JWT_SECRET));
+
+//apples
+app.use("/api/v1/auth",authRouter);
+app.use("/api/v1/users",userRouter);
+app.use("/api/v1/blogs",blogRouter);
+
+
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 3000;
 

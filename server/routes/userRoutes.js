@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express();
-const {authenticateUser,authorizePermissions} = require("../middleware/authentication")
+const {authenticateUser,authorizePermissions} = require("../middleware/authentication");
 const { getAllUsers,getUser,showCurrentUser,updateUser,updateUserPassword } = 
 require("../controllers/userController");
 

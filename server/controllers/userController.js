@@ -17,7 +17,6 @@ const getUser = async (req,res) => {
     if (!user) {
         throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
     }
-    console.log(req.user)
     checkPermissions(req.user,user._id);
     res.status(StatusCodes.OK).json({
         user : user, 
@@ -30,11 +29,11 @@ const showCurrentUser = async (req,res) => {
 }
 
 const updateUser = async (req,res) => {
-    const {email, name} = req.body;
-    if (!email || !name) {
+    const {name,surname} = req.body;
+    if (!surname || !name) {
         throw new CustomError.BadRequestError("Lütfen tüm alanları doldurunuz");
     }
-    const user = await User.findOneAndUpdate({_id : req.user.userId},{email,name},{new:true,runValidators:true});
+    const user = await User.findOneAndUpdate({_id : req.user.userId},{surname,name},{new:true,runValidators:true});
     const tokenUser = createTokenUser(user);
     attachCookiesToResponse({res,user:tokenUser});
     res.status(StatusCodes.OK).json({user : tokenUser,msg : "İşlem başarılı"});
