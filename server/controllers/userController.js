@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
+const {createTokenUser,attachCookiesToResponse,checkPermissions} = require("../utils");
 
 const getAllUsers = async (req,res) => {
     const users = await User.find({role:"user"}).select('-password');
@@ -16,6 +17,8 @@ const getUser = async (req,res) => {
     if (!user) {
         throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
     }
+    console.log(req.user)
+    checkPermissions(req.user,user._id);
     res.status(StatusCodes.OK).json({
         user : user, 
         msg : "İşlem başarılı",
@@ -23,15 +26,33 @@ const getUser = async (req,res) => {
 }
 
 const showCurrentUser = async (req,res) => {
-    res.send(req.params);
+    res.status(StatusCodes.OK).json({user : req.user});
 }
 
 const updateUser = async (req,res) => {
-    res.send("update user");
+    const {email, name} = req.body;
+    if (!email || !name) {
+        throw new CustomError.BadRequestError("Lütfen tüm alanları doldurunuz");
+    }
+    const user = await User.findOneAndUpdate({_id : req.user.userId},{email,name},{new:true,runValidators:true});
+    const tokenUser = createTokenUser(user);
+    attachCookiesToResponse({res,user:tokenUser});
+    res.status(StatusCodes.OK).json({user : tokenUser,msg : "İşlem başarılı"});
 }
 
 const updateUserPassword = async (req,res) => {
-    res.send("update user password");
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+        throw new CustomError.BadRequestError("Lütfen alanları doldurunuz");
+    }
+    const user = await User.findOne({_id : req.user.userId});
+    const isPasswordCorrect = await user.comparePassword(oldPassword);
+    if (!isPasswordCorrect) {
+        throw new CustomError.UnauthenticatedError("Geçersiz kimlik bilgileri");
+    }
+    user.password = newPassword;
+    await user.save();
+    res.status(StatusCodes.OK).json({msg : "Şifre başarıyla güncellendi"});
 }
 
 module.exports = {
