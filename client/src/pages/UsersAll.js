@@ -5,7 +5,7 @@ import axios from 'axios'
 export default function UsersAll() {
   const [post, setPost] = React.useState(null);
   React.useEffect(() => {
-    axios.get('http://localhost:3000/api/v1/users').then((response) => {
+    axios.get('http://localhost:3000/api/v1/users',{withCredentials: true}).then((response) => {
       setPost(response.data);
       console.log(response);
     });
