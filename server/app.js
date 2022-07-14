@@ -3,7 +3,8 @@ require("express-async-errors");
 
 const express = require("express");
 const app = express();
-
+var cors = require('cors');    
+app.use(cors({credentials: true, origin: 'http://localhost:3001'}));
 //rest of the package
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
@@ -11,7 +12,10 @@ const cookieParser = require("cookie-parser");
 //database
 const connectDB = require("./db/connect");
 
-//allow origin
+
+
+
+// allow origin
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');

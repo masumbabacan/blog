@@ -20,7 +20,7 @@ const Login = () => {
         axios.post('http://localhost:3000/api/v1/auth/login', {
             email: email,
             password: password
-        })
+        },{ withCredentials: true })
         .then((response) =>{
             alert(response.data.msg);
             console.log(response.data);
