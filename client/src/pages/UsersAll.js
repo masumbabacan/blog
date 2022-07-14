@@ -7,9 +7,9 @@ export default function UsersAll() {
   React.useEffect(() => {
     axios.get('http://localhost:3000/api/v1/users',{ withCredentials: true }).then((response) => {
       setPost(response.data);
-      console.log(response);
+      console.log(response.data);
     }).catch((err) => {
-      console.log(err);
+      console.log(err.response.data);
     });
   }, []);
 

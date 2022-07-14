@@ -12,6 +12,9 @@ const BlogSchema = new mongoose.Schema({
         required : [true,"Lütfen içerik giriniz"],
         minLength : [150,"içerik en az 150 karakter olmalıdır"],
     },
+    image : {
+        type : String,
+    }
 },{timestamps : true});
 
 module.exports = mongoose.model('Blog',BlogSchema);

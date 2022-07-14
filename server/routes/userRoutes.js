@@ -6,7 +6,7 @@ require("../controllers/userController");
 
 router.route("/").get(
     authenticateUser,
-    authorizePermissions('admin'),
+    authorizePermissions('user'),
     getAllUsers,
 );
 
