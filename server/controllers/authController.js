@@ -7,9 +7,11 @@ const {
     createTokenUser, 
     sendVerificationEmail, 
     sendResetPasswordEmail,
-    createHash 
+    createHash,
+    nullControl
 } = require("../utils/index");
 const crypto = require('crypto');
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
 const register = async (req,res) => {
     const { email, name, surname, password } = req.body;
@@ -30,7 +32,7 @@ const register = async (req,res) => {
     });
     res.status(StatusCodes.CREATED).json({msg : "İşlem başarılı! Lütfen hesabınızı doğrulamak için e-postanızı kontrol edin"});
 }
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
+
 const verifyEmail = async (req,res) => {
     const {verificationToken,email} = req.body;
     const user = await User.findOne({email});
@@ -46,9 +48,10 @@ const verifyEmail = async (req,res) => {
 
 const login = async (req,res) => {
     const {email,password} = req.body;
-    if (!email || !password) {
-        throw new CustomError.BadRequestError("Lütfen email ve şifrenizi girin");
-    }
+    // if (!email || !password) {
+    //     throw new CustomError.BadRequestError("Lütfen email ve şifrenizi girin");
+    // }
+    await nullControl([email,password]);
 
     const user = await User.findOne({email});
     if (!user) {
@@ -102,9 +105,10 @@ const logout = async (req,res) => {
 
 const forgotPassword = async (req,res) => {
     const {email} = req.body;
-    if (!email) {
-        throw new CustomError.BadRequestError("Lütfen e-posta adresini girin");
-    }
+    // if (!email) {
+    //     throw new CustomError.BadRequestError("Lütfen e-posta adresini girin");
+    // }
+    await nullControl([email]);
     const user = await User.findOne({email});
     if (user) {
         const passwordToken = crypto.randomBytes(70).toString("hex");
@@ -131,9 +135,10 @@ const forgotPassword = async (req,res) => {
 
 const resetPassword = async (req,res) => {
     const {token,email,password} = req.body;
-    if (!token || !email || !password) {
-        throw new CustomError.BadRequestError("Lütfen tüm alanları eksiksiz doldurun");
-    }
+    // if (!token || !email || !password) {
+    //     throw new CustomError.BadRequestError("Lütfen tüm alanları eksiksiz doldurun");
+    // }
+    await nullControl([token,email,password]);
     const user = await User.findOne({email});
     if (user) {
         const currentDate = new Date();

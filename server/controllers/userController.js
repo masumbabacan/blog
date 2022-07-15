@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const {createTokenUser,attachCookiesToResponse,checkPermissions} = require("../utils");
+const {createTokenUser,attachCookiesToResponse,checkPermissions, nullControl} = require("../utils");
 
 const getAllUsers = async (req,res) => {
     const users = await User.find({role:"user"}).select('-password');
@@ -30,9 +30,10 @@ const showCurrentUser = async (req,res) => {
 
 const updateUser = async (req,res) => {
     const {name,surname} = req.body;
-    if (!surname || !name) {
-        throw new CustomError.BadRequestError("Lütfen tüm alanları doldurunuz");
-    }
+    // if (!surname || !name) {
+    //     throw new CustomError.BadRequestError("Lütfen tüm alanları doldurunuz");
+    // }
+    await nullControl([name,surname]);
     const user = await User.findOneAndUpdate({_id : req.user.userId},{surname,name},{new:true,runValidators:true});
     const tokenUser = createTokenUser(user);
     attachCookiesToResponse({res,user:tokenUser});
@@ -41,9 +42,10 @@ const updateUser = async (req,res) => {
 
 const updateUserPassword = async (req,res) => {
     const { oldPassword, newPassword } = req.body;
-    if (!oldPassword || !newPassword) {
-        throw new CustomError.BadRequestError("Lütfen alanları doldurunuz");
-    }
+    // if (!oldPassword || !newPassword) {
+    //     throw new CustomError.BadRequestError("Lütfen alanları doldurunuz");
+    // }
+    await nullControl([oldPassword,newPassword]);
     const user = await User.findOne({_id : req.user.userId});
     const isPasswordCorrect = await user.comparePassword(oldPassword);
     if (!isPasswordCorrect) {
