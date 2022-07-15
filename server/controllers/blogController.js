@@ -12,12 +12,12 @@ const createBlog = async (req,res) => {
 };
 
 const getAllBlogs = async (req,res) => {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({status : true});
     res.status(StatusCodes.OK).json({ blogs : blogs, msg : "İşlem başarılı", NumberOfBlogs : blogs.length });
 }
 
 const getBlog = async (req,res) => {
-    const blog = await Blog.findOne({_id : req.params.id});
+    const blog = await Blog.findOne({_id : req.params.id, status : true});
     if (!blog) {
         throw new CustomError.NotFoundError('Kayıt bulunamadı');
     }
