@@ -1,7 +1,7 @@
 const Blog = require("../models/Blog");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const { singleImageUpload, fileDelete } = require('../utils');
+const { singleImageUpload, fileDelete, checkPermissions } = require('../utils');
 
 const createBlog = async (req,res) => {
     const {name,content} = req.body;
@@ -13,11 +13,7 @@ const createBlog = async (req,res) => {
 
 const getAllBlogs = async (req,res) => {
     const blogs = await Blog.find({});
-    res.status(StatusCodes.OK).json({
-        blogs : blogs, 
-        msg : "İşlem başarılı",
-        NumberOfBlogs : blogs.length
-    });
+    res.status(StatusCodes.OK).json({ blogs : blogs, msg : "İşlem başarılı", NumberOfBlogs : blogs.length });
 }
 
 const getBlog = async (req,res) => {
@@ -25,41 +21,42 @@ const getBlog = async (req,res) => {
     if (!blog) {
         throw new CustomError.NotFoundError('Kayıt bulunamadı');
     }
-    res.status(StatusCodes.OK).json({
-        blog : blog, 
-        msg : "İşlem başarılı"
-    });
+    res.status(StatusCodes.OK).json({ blog : blog, msg : "İşlem başarılı" });
 }
 
 const updateBlog = async (req,res) => {
-    const id = req.params.id;
     const {name,content} = req.body;
-
-    const blog = await Blog.findOne({_id : id});
-
+    const blog = await Blog.findOne({_id : req.params.id});
     if (!blog) {
         throw new CustomError.NotFoundError('Kayıt bulunamadı');
     }
-
-    //istek içerisinde resim var mı? Varsa;
+    checkPermissions(req.user,blog.user);
     if (req.files) {
-        //eski resim varsa sil
         await fileDelete(blog.image);
-        //yeni resmi yükle
         const image = await singleImageUpload(req);
         blog.image = image;
     }
-    console.log(req.user);
     blog.name = name;
     blog.content = content;
     await blog.save();
+    res.status(StatusCodes.OK).json({ msg : "Blog başarıyla güncellendi" });
+}
 
-    res.status(StatusCodes.OK).json({ msg : "Güncelleme başarılı" });
+const deleteBlog = async (req,res) => {
+    const blog = await Blog.findOne({_id : req.params.id});
+    if (!blog) {
+        throw new CustomError.NotFoundError('Kayıt bulunamadı');
+    }
+    checkPermissions(req.user,blog.user);
+    blog.status = false;
+    blog.save();
+    res.status(StatusCodes.OK).json({ msg : "Blog başarıyla silindi" });
 }
 
 module.exports = {
     createBlog,
     getAllBlogs,
     getBlog,
-    updateBlog
+    updateBlog,
+    deleteBlog
 }
