@@ -15,11 +15,15 @@ process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
 const register = async (req,res) => {
     const { email, name, surname, password } = req.body;
-    const emailAllreadyExist = await User.findOne({email});
-    if (emailAllreadyExist) {
+
+    const emailExist = await User.findOne({email});
+
+    if (emailExist) {
         throw new CustomError.BadRequestError("Bu email zaten kayıtlı");
     }
+
     const verificationToken = crypto.randomBytes(40).toString('hex');
+
     const user = await User.create({name,surname,email,password,verificationToken});
 
     const origin = 'http://localhost:3000/api/v1/auth';
@@ -30,6 +34,7 @@ const register = async (req,res) => {
         verificationToken : user.verificationToken,
         origin : origin,
     });
+
     res.status(StatusCodes.CREATED).json({msg : "İşlem başarılı! Lütfen hesabınızı doğrulamak için e-postanızı kontrol edin"});
 }
 
@@ -48,17 +53,17 @@ const verifyEmail = async (req,res) => {
 
 const login = async (req,res) => {
     const {email,password} = req.body;
-    // if (!email || !password) {
-    //     throw new CustomError.BadRequestError("Lütfen email ve şifrenizi girin");
-    // }
+
     await nullControl([email,password]);
 
     const user = await User.findOne({email});
+
     if (!user) {
         throw new CustomError.UnauthenticatedError("Geçersiz kimlik bilgileri");
     }
 
     const isPasswordCorrect = await user.comparePassword(password);
+
     if (!isPasswordCorrect) {
         throw new CustomError.BadRequestError("Geçersiz kimlik bilgileri");
     }
@@ -66,12 +71,15 @@ const login = async (req,res) => {
     if (!user.isVerified) {
         throw new CustomError.UnauthenticatedError("Lütfen email adresinizi doğrulayın");
     }
+
     const tokenUser = createTokenUser(user);
+
     let refreshToken = '';
 
     const existingToken = await Token.findOne({ user : user._id });
+
     if (existingToken) {
-        const {isValid} = existingToken;
+        const { isValid } = existingToken;
         if (!isValid) {
             throw new CustomError.UnauthenticatedError("geçersiz kimlik bilgileri");
         }
@@ -105,22 +113,19 @@ const logout = async (req,res) => {
 
 const forgotPassword = async (req,res) => {
     const {email} = req.body;
-    // if (!email) {
-    //     throw new CustomError.BadRequestError("Lütfen e-posta adresini girin");
-    // }
     await nullControl([email]);
     const user = await User.findOne({email});
     if (user) {
         const passwordToken = crypto.randomBytes(70).toString("hex");
         const origin = 'http://localhost:3000/api/v1/auth';
-        console.log(passwordToken)
-        //send email
+
         await sendResetPasswordEmail({
             name:user.name,
             email:user.email,
             token: passwordToken,
             origin : origin,
         });
+
         const tenMinutes = 1000*60*10;
         const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
 
@@ -135,9 +140,7 @@ const forgotPassword = async (req,res) => {
 
 const resetPassword = async (req,res) => {
     const {token,email,password} = req.body;
-    // if (!token || !email || !password) {
-    //     throw new CustomError.BadRequestError("Lütfen tüm alanları eksiksiz doldurun");
-    // }
+    
     await nullControl([token,email,password]);
     const user = await User.findOne({email});
     if (user) {
