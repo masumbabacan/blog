@@ -18,18 +18,14 @@ const getAllBlogs = async (req,res) => {
 
 const getBlog = async (req,res) => {
     const blog = await Blog.findOne({_id : req.params.id, status : true});
-    if (!blog) {
-        throw new CustomError.NotFoundError('Kayıt bulunamadı');
-    }
+    if (!blog) throw new CustomError.NotFoundError('Kayıt bulunamadı');
     res.status(StatusCodes.OK).json({ blog : blog, msg : "İşlem başarılı" });
 }
 
 const updateBlog = async (req,res) => {
     const {name,content} = req.body;
     const blog = await Blog.findOne({_id : req.params.id});
-    if (!blog) {
-        throw new CustomError.NotFoundError('Kayıt bulunamadı');
-    }
+    if (!blog) throw new CustomError.NotFoundError('Kayıt bulunamadı');
     checkPermissions(req.user,blog.user);
     if (req.files) {
         await fileDelete(blog.image);
@@ -44,9 +40,7 @@ const updateBlog = async (req,res) => {
 
 const deleteBlog = async (req,res) => {
     const blog = await Blog.findOne({_id : req.params.id});
-    if (!blog) {
-        throw new CustomError.NotFoundError('Kayıt bulunamadı');
-    }
+    if (!blog) throw new CustomError.NotFoundError('Kayıt bulunamadı');
     checkPermissions(req.user,blog.user);
     blog.status = false;
     blog.save();
