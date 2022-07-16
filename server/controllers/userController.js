@@ -5,11 +5,7 @@ const {createTokenUser,attachCookiesToResponse,checkPermissions, nullControl} = 
 
 const getAllUsers = async (req,res) => {
     const users = await User.find({role:"user"}).select('-password');
-    res.status(StatusCodes.OK).json({
-        users : users, 
-        msg : "İşlem başarılı",
-        NumberOfUsers : users.length
-    });
+    res.status(StatusCodes.OK).json({ users : users, msg : "İşlem başarılı", NumberOfUsers : users.length });
 }
 
 const getUser = async (req,res) => {
@@ -29,7 +25,7 @@ const updateUser = async (req,res) => {
     const user = await User.findOneAndUpdate({_id : req.user.userId},{surname,name},{new:true,runValidators:true});
     const tokenUser = createTokenUser(user);
     attachCookiesToResponse({res,user:tokenUser});
-    res.status(StatusCodes.OK).json({user : tokenUser,msg : "İşlem başarılı"});
+    res.status(StatusCodes.OK).json({user : tokenUser, msg : "İşlem başarılı"});
 }
 
 const updateUserPassword = async (req,res) => {
