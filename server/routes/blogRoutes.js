@@ -4,32 +4,11 @@ const {authenticateUser,authorizePermissions} = require("../middleware/authentic
 const { createBlog, getAllBlogs, getBlog, updateBlog, deleteBlog } = 
 require("../controllers/blogController");
 
-router.route('/').get(
-    authenticateUser,
-    authorizePermissions('admin','user'),
-    getAllBlogs
-);
 
-router.route('/:id').get(
-    getBlog
-);
-
-router.route('/').post(
-    authenticateUser,
-    authorizePermissions('user','admin'),
-    createBlog
-);
-
-router.route('/:id').patch(
-    authenticateUser,
-    authorizePermissions('user','admin'),
-    updateBlog
-);
-
-router.route('/:id').delete(
-    authenticateUser,
-    authorizePermissions('user','admin'),
-    deleteBlog
-);
+router.get("/",getAllBlogs); //get all data
+router.get("/:id",getBlog); //get single data
+router.post("/",authenticateUser,createBlog); //create data
+router.patch("/:id",authenticateUser,updateBlog); //update data
+router.delete("/:id",authenticateUser,deleteBlog); //delete data
 
 module.exports = router;

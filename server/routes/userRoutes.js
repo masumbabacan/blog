@@ -4,30 +4,12 @@ const {authenticateUser,authorizePermissions} = require("../middleware/authentic
 const { getAllUsers,getUser,showCurrentUser,updateUser,updateUserPassword } = 
 require("../controllers/userController");
 
-router.route("/").get(
-    authenticateUser,
-    authorizePermissions('user'),
-    getAllUsers,
-);
 
-router.route("/showMe").get(
-    authenticateUser,
-    showCurrentUser
-);
+router.get("/",authenticateUser,authorizePermissions('admin'),getAllUsers); //get all data
+router.get("/:id",authenticateUser,getUser); //get single data
+router.get("/showMe",authenticateUser,showCurrentUser); //show current user data
+router.patch("/updateUserPassword",authenticateUser,updateUserPassword); //update user password
+router.patch("/updateUser",authenticateUser,updateUser); //update user
 
-router.route("/updateUserPassword").patch(
-    authenticateUser,
-    updateUserPassword
-);
-
-router.route("/updateUser").patch(
-    authenticateUser,
-    updateUser
-);
-
-router.route("/:id").get(
-    authenticateUser,
-    getUser
-);
 
 module.exports = router;
