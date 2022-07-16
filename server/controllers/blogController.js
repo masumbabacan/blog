@@ -70,10 +70,20 @@ const deleteBlog = async (req,res) => {
     res.status(StatusCodes.OK).json({ msg : "Blog başarıyla silindi" });
 }
 
+const authenticateUserBlogs = async (req,res) => {
+    console.log(req.query.page);
+    const skip = req.query.page * req.query.limit;
+    const limit = req.query.limit;
+    if (limit > 500) throw new CustomError.BadRequestError("Bir sayfada en fazla 500 kayıt görüntülenebilir");
+    const blogs = await Blog.find({user : req.user.userId},{},{skip : skip - limit, limit : limit}).select('-user');
+    res.status(StatusCodes.OK).json({ blogs : blogs, msg : "İşlem başarılı", NumberOfBlogs : blogs.length });
+}
+
 module.exports = {
     createBlog,
     getAllBlogs,
     getBlog,
     updateBlog,
-    deleteBlog
+    deleteBlog,
+    authenticateUserBlogs
 }
