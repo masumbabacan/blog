@@ -10,24 +10,11 @@ router.route("/").get(
     getAllUsers,
 );
 
-router.route("/showMe").get(
-    authenticateUser,
-    showCurrentUser
-);
+router.get("/",authenticateUser,authorizePermissions('admin'),getAllUsers); //get all data
+router.get("/showMe",authenticateUser,showCurrentUser); //show current user data
+router.get("/:id",authenticateUser,getUser); //get single data
+router.patch("/updateUserPassword",authenticateUser,updateUserPassword); //update user password
+router.patch("/updateUser",authenticateUser,updateUser); //update user
 
-router.route("/updateUserPassword").patch(
-    authenticateUser,
-    updateUserPassword
-);
 
-router.route("/updateUser").patch(
-    authenticateUser,
-    updateUser
-);
-
-router.route("/:id").get(
-    authenticateUser,
-    getUser
-);
-
-module.exports = router;
+module.exports = router; 
