@@ -4,12 +4,6 @@ const {authenticateUser,authorizePermissions} = require("../middleware/authentic
 const { getAllUsers,getUser,showCurrentUser,updateUser,updateUserPassword } = 
 require("../controllers/userController");
 
-router.route("/").get(
-    authenticateUser,
-    authorizePermissions('admin'),
-    getAllUsers,
-);
-
 router.get("/",authenticateUser,authorizePermissions('admin'),getAllUsers); //get all data
 router.get("/showMe",authenticateUser,showCurrentUser); //show current user data
 router.get("/:id",authenticateUser,getUser); //get single data
