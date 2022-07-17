@@ -2,6 +2,8 @@ const Blog = require("../models/Blog");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const { singleImageUpload, fileDelete, checkPermissions } = require('../utils');
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 const createBlog = async (req,res) => {
     //information from the request
@@ -71,11 +73,11 @@ const deleteBlog = async (req,res) => {
 }
 
 const authenticateUserBlogs = async (req,res) => {
-    console.log(req.query.page);
     const skip = req.query.page * req.query.limit;
     const limit = req.query.limit;
-    if (limit > 500) throw new CustomError.BadRequestError("Bir sayfada en fazla 500 kayıt görüntülenebilir");
+    if (limit > 100) throw new CustomError.BadRequestError("Bir sayfada en fazla 100 kayıt görüntülenebilir");
     const blogs = await Blog.find({user : req.user.userId},{},{skip : skip - limit, limit : limit}).select('-user');
+    //await Blog.find().populate({'path' : 'user', match : {'_id' : req.user.userId}, select : '-password -isVerified -verificationToken -__v'});
     res.status(StatusCodes.OK).json({ blogs : blogs, msg : "İşlem başarılı", NumberOfBlogs : blogs.length });
 }
 
