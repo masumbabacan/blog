@@ -4,55 +4,54 @@ const CustomError = require("../errors");
 const {createTokenUser,attachCookiesToResponse,checkPermissions, nullControl} = require("../utils");
 
 const getAllUsers = async (req,res) => {
+    //get the requested data
     const users = await User.find({role:"user"}).select('-password');
-    res.status(StatusCodes.OK).json({
-        users : users, 
-        msg : "İşlem başarılı",
-        NumberOfUsers : users.length
-    });
+    //return successful message and data
+    res.status(StatusCodes.OK).json({ users : users, msg : "İşlem başarılı", NumberOfUsers : users.length });
 }
 
 const getUser = async (req,res) => {
+    //get the requested data
     const user = await User.findOne({_id:req.params.id}).select('-password');
-    if (!user) {
-        throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
-    }
+    //check data
+    if (!user) throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
+    //authorization check of the person who wants to update
     checkPermissions(req.user,user._id);
-    res.status(StatusCodes.OK).json({
-        user : user, 
-        msg : "İşlem başarılı",
-    });
+    //return successful message and data
+    res.status(StatusCodes.OK).json({ user : user, msg : "İşlem başarılı" });
 }
 
 const showCurrentUser = async (req,res) => {
+    //return successful message and data
     res.status(StatusCodes.OK).json({user : req.user});
 }
 
 const updateUser = async (req,res) => {
+    //retrieve the requested data
     const {name,surname} = req.body;
-    // if (!surname || !name) {
-    //     throw new CustomError.BadRequestError("Lütfen tüm alanları doldurunuz");
-    // }
-    await nullControl([name,surname]);
+    //update data
     const user = await User.findOneAndUpdate({_id : req.user.userId},{surname,name},{new:true,runValidators:true});
+    //generate new token
     const tokenUser = createTokenUser(user);
+    //attach cookies to response
     attachCookiesToResponse({res,user:tokenUser});
-    res.status(StatusCodes.OK).json({user : tokenUser,msg : "İşlem başarılı"});
+    //return successful message and data
+    res.status(StatusCodes.OK).json({user : tokenUser, msg : "İşlem başarılı"});
 }
 
 const updateUserPassword = async (req,res) => {
+    //retrieve the requested data
     const { oldPassword, newPassword } = req.body;
-    // if (!oldPassword || !newPassword) {
-    //     throw new CustomError.BadRequestError("Lütfen alanları doldurunuz");
-    // }
+    //null data check
     await nullControl([oldPassword,newPassword]);
+    //user password change
     const user = await User.findOne({_id : req.user.userId});
     const isPasswordCorrect = await user.comparePassword(oldPassword);
-    if (!isPasswordCorrect) {
-        throw new CustomError.UnauthenticatedError("Geçersiz kimlik bilgileri");
-    }
+    if (!isPasswordCorrect) throw new CustomError.UnauthenticatedError("Geçersiz kimlik bilgileri");
+    //save data
     user.password = newPassword;
     await user.save();
+    //return successful message
     res.status(StatusCodes.OK).json({msg : "Şifre başarıyla güncellendi"});
 }
 
