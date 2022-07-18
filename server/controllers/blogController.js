@@ -2,8 +2,6 @@ const Blog = require("../models/Blog");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const { singleImageUpload, fileDelete, checkPermissions } = require('../utils');
-const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
 
 const createBlog = async (req,res) => {
     //information from the request
@@ -19,19 +17,22 @@ const createBlog = async (req,res) => {
 };
 
 const getAllBlogs = async (req,res) => {
+    const skip = req.query.page * req.query.limit;
+    const limit = req.query.limit;
+    if (limit > 100) throw new CustomError.BadRequestError("Bir sayfada en fazla 100 kayıt görüntülenebilir");
     //pull data with active status
-    const blogs = await Blog.find({status : true});
+    const blogs = await Blog.find({},{},{skip : skip - limit, limit : limit}).populate({'path' : 'user', select : '-password -isVerified -verificationToken -__v'});
     //return successful message and data
-    res.status(StatusCodes.OK).json({ blogs : blogs, msg : "İşlem başarılı", NumberOfBlogs : blogs.length });
+    res.status(StatusCodes.OK).json({ data : blogs, msg : "İşlem başarılı", NumberOfData : blogs.length });
 }
 
 const getBlog = async (req,res) => {
     //retrieve the requested data
-    const blog = await Blog.findOne({_id : req.params.id, status : true});
+    const blog = await Blog.findOne({_id : req.params.id, status : true}).populate({'path' : 'user', select : '-password -isVerified -verificationToken -__v'});
     //check data
     if (!blog) throw new CustomError.NotFoundError('Kayıt bulunamadı');
     //return successful message and data
-    res.status(StatusCodes.OK).json({ blog : blog, msg : "İşlem başarılı" });
+    res.status(StatusCodes.OK).json({ data : blog, msg : "İşlem başarılı" });
 }
 
 const updateBlog = async (req,res) => {
@@ -77,8 +78,7 @@ const authenticateUserBlogs = async (req,res) => {
     const limit = req.query.limit;
     if (limit > 100) throw new CustomError.BadRequestError("Bir sayfada en fazla 100 kayıt görüntülenebilir");
     const blogs = await Blog.find({user : req.user.userId},{},{skip : skip - limit, limit : limit}).select('-user');
-    //await Blog.find().populate({'path' : 'user', match : {'_id' : req.user.userId}, select : '-password -isVerified -verificationToken -__v'});
-    res.status(StatusCodes.OK).json({ blogs : blogs, msg : "İşlem başarılı", NumberOfBlogs : blogs.length });
+    res.status(StatusCodes.OK).json({ data : blogs, msg : "İşlem başarılı", NumberOfData : blogs.length });
 }
 
 module.exports = {
@@ -89,3 +89,8 @@ module.exports = {
     deleteBlog,
     authenticateUserBlogs
 }
+
+
+
+//populate
+//await Blog.find().populate({'path' : 'user', match : {'_id' : req.user.userId}, select : '-password -isVerified -verificationToken -__v'});
