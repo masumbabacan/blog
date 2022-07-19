@@ -19,8 +19,8 @@ const getAllUsers = async (req,res) => {
 }
 
 const getUser = async (req,res) => {
-    const user = await User.findOne({username:req.params.id}).populate('blogs');
-    console.log(user);
+    const user = await User.findOne({username:req.params.id}).select('-password -verificationToken -__v')
+    .populate('blogs');
     if (!user) throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
     //return successful message and data
     res.status(StatusCodes.OK).json({ user : user, msg : "İşlem başarılı" });

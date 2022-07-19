@@ -63,10 +63,7 @@ const UserSchema = new mongoose.Schema({
     blockingDate : {
         type : Date,
     },
-    blogs: [{ 
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Blog',
-    }]
+    blogs: [{ type: mongoose.Types.ObjectId, ref: 'Blog' }]
 });
 
 UserSchema.pre('save', async function(){

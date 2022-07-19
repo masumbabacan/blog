@@ -1,18 +1,17 @@
 const Blog = require("../models/Blog");
+const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const { singleImageUpload, fileDelete, checkPermissions } = require('../utils');
 
 const createBlog = async (req,res) => {
-    //information from the request
     const {name,content} = req.body;
-    //image control and upload process
     const image = await singleImageUpload(req);
-    //user information that made the request
-    const user = req.user.userId;
-    //creating and saving data
-    await Blog.create({name,content,image,user});
-    //return successful message
+    const user = await User.findOne({_id : req.user.userId});
+    if (!user) throw new CustomError.NotFoundError('Kayıt sırasına hata oluştu');
+    const blog = await Blog.create({name,content,image,user : user._id});
+    user.blogs.push(blog);
+    await user.save();
     res.status(StatusCodes.CREATED).json({msg : 'Kayıt başarıyla eklendi'});
 };
 
