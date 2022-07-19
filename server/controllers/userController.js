@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Blog = require("../models/Blog");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const {
@@ -12,18 +13,17 @@ const {
 
 const getAllUsers = async (req,res) => {
     //get the requested data
-    const users = await User.find({role:"user"}).select('-password -__v -verificationToken');
+    const users = await User.find({role:"user"}).select('-password -__v -verificationToken -passwordToken -passwordTokenExpirationDate');
     //return successful message and data
     res.status(StatusCodes.OK).json({ data : users, msg : "İşlem başarılı", NumberOfData : users.length });
 }
 
 const getUser = async (req,res) => {
-    //get the requested data
-    const user = await User.findOne({username:req.params.id}).select('-password -__v -verificationToken');
-    //check data
+    const user = await User.findOne({username:req.params.id}).populate('blogs');
+    console.log(user);
     if (!user) throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
     //return successful message and data
-    res.status(StatusCodes.OK).json({ data : user, msg : "İşlem başarılı" });
+    res.status(StatusCodes.OK).json({ user : user, msg : "İşlem başarılı" });
 }
 
 const showCurrentUser = async (req,res) => {

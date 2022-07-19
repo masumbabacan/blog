@@ -49,7 +49,7 @@ const UserSchema = new mongoose.Schema({
         type : Boolean,
         default : false,
     },
-    verifiedDate : Date,
+    verified : Date,
     passwordToken:{
         type : String,
     },
@@ -63,6 +63,10 @@ const UserSchema = new mongoose.Schema({
     blockingDate : {
         type : Date,
     },
+    blogs: [{ 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Blog'
+    }]
 });
 
 UserSchema.pre('save', async function(){
