@@ -15,14 +15,17 @@ const {
 
 const register = async (req,res) => {
     //information required for registration
-    const { email, name, surname, password } = req.body;
+    const { email, name, surname,username, password } = req.body;
     //email check
     const emailExist = await User.findOne({email});
     if (emailExist) throw new CustomError.BadRequestError("Bu email zaten kayıtlı");
+    //username check
+    const usernameExist = await User.findOne({username});
+    if (usernameExist) throw new CustomError.BadRequestError("Bu kullanıcı adı daha önceden alınmış");
     //Generating tokens for email verification
     const verificationToken = crypto.randomBytes(40).toString('hex');
     //save data
-    const user = await User.create({name,surname,email,password,verificationToken});
+    const user = await User.create({name,surname,email,username,password,verificationToken});
     //Creating the necessary information to send an email
     const origin = 'http://localhost:3000/api/v1/auth';
     await sendVerificationEmail({
@@ -54,17 +57,19 @@ const verifyEmail = async (req,res) => {
 
 const login = async (req,res) => {
     //Information required for login
-    const {email,password} = req.body;
+    const {username,password} = req.body;
     //null data check
-    await nullControl([email,password]);
+    await nullControl([username,password]);
     //user check
-    const user = await User.findOne({email});
+    const user = await User.findOne({username});
     if (!user) throw new CustomError.UnauthenticatedError("Geçersiz kimlik bilgileri");
     //password check
     const isPasswordCorrect = await user.comparePassword(password);
     if (!isPasswordCorrect) throw new CustomError.BadRequestError("Geçersiz kimlik bilgileri");
     //verify account control
     if (!user.isVerified) throw new CustomError.UnauthenticatedError("Lütfen email adresinizi doğrulayın");
+    //blocked check
+    if (user.accountBlock) throw new CustomError.UnauthenticatedError("Hesap bloke edilmiş");
     //generating token information
     const tokenUser = createTokenUser(user);
     let refreshToken = '';

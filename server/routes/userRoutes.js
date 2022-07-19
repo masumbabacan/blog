@@ -6,7 +6,7 @@ require("../controllers/userController");
 
 router.get("/",authenticateUser,authorizePermissions('admin'),getAllUsers); //get all data
 router.get("/showMe",authenticateUser,showCurrentUser); //show current user data
-router.get("/:id",authenticateUser,getUser); //get single data
+router.get("/:id",getUser); //get single data
 router.patch("/updateUserPassword",authenticateUser,updateUserPassword); //update user password
 router.patch("/updateUser",authenticateUser,updateUser); //update user
 

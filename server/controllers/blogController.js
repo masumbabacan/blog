@@ -21,14 +21,14 @@ const getAllBlogs = async (req,res) => {
     const limit = req.query.limit;
     if (limit > 100) throw new CustomError.BadRequestError("Bir sayfada en fazla 100 kayıt görüntülenebilir");
     //pull data with active status
-    const blogs = await Blog.find({},{},{skip : skip - limit, limit : limit}).populate({'path' : 'user', select : '-password -isVerified -verificationToken -__v'});
+    const blogs = await Blog.find({},{},{skip : skip - limit, limit : limit}).populate({'path' : 'user', select : '_id name surname email role verified'});
     //return successful message and data
     res.status(StatusCodes.OK).json({ data : blogs, msg : "İşlem başarılı", NumberOfData : blogs.length });
 }
 
 const getBlog = async (req,res) => {
     //retrieve the requested data
-    const blog = await Blog.findOne({_id : req.params.id, status : true}).populate({'path' : 'user', select : '-password -isVerified -verificationToken -__v'});
+    const blog = await Blog.findOne({_id : req.params.id, status : true}).populate({'path' : 'user', select : '_id name surname email role verified'});
     //check data
     if (!blog) throw new CustomError.NotFoundError('Kayıt bulunamadı');
     //return successful message and data

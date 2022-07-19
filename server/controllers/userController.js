@@ -1,41 +1,54 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const {createTokenUser,attachCookiesToResponse,checkPermissions, nullControl} = require("../utils");
+const {
+    createTokenUser,
+    attachCookiesToResponse,
+    checkPermissions, 
+    nullControl,
+    singleImageUpload, 
+    fileDelete
+} = require("../utils");
 
 const getAllUsers = async (req,res) => {
     //get the requested data
-    const users = await User.find({role:"user"}).select('-password');
+    const users = await User.find({role:"user"}).select('-password -__v -verificationToken');
     //return successful message and data
-    res.status(StatusCodes.OK).json({ users : users, msg : "İşlem başarılı", NumberOfUsers : users.length });
+    res.status(StatusCodes.OK).json({ data : users, msg : "İşlem başarılı", NumberOfData : users.length });
 }
 
 const getUser = async (req,res) => {
     //get the requested data
-    const user = await User.findOne({_id:req.params.id}).select('-password');
+    const user = await User.findOne({username:req.params.id}).select('-password -__v -verificationToken');
     //check data
     if (!user) throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
-    //authorization check of the person who wants to update
-    checkPermissions(req.user,user._id);
     //return successful message and data
-    res.status(StatusCodes.OK).json({ user : user, msg : "İşlem başarılı" });
+    res.status(StatusCodes.OK).json({ data : user, msg : "İşlem başarılı" });
 }
 
 const showCurrentUser = async (req,res) => {
+    //get the requested data
+    const user = await User.findOne({_id : req.user.userId}).select('-password -__v -verificationToken');
     //return successful message and data
-    res.status(StatusCodes.OK).json({user : req.user});
+    res.status(StatusCodes.OK).json({data : user});
 }
 
 const updateUser = async (req,res) => {
     //retrieve the requested data
     const {name,surname} = req.body;
-    //update data
-    const user = await User.findOneAndUpdate({_id : req.user.userId},{surname,name},{new:true,runValidators:true});
-    //generate new token
+    const user = await User.findOne({_id : req.user.userId});
+    if (!user) throw new CustomError.NotFoundError('Kayıt bulunamadı');
+    checkPermissions(req.user,user._id);
+    if (req.files) {
+        await fileDelete(user.image);
+        const image = await singleImageUpload(req);
+        user.image = image;
+    }
+    user.name = name;
+    user.surname = surname;
+    await user.save();
     const tokenUser = createTokenUser(user);
-    //attach cookies to response
     attachCookiesToResponse({res,user:tokenUser});
-    //return successful message and data
     res.status(StatusCodes.OK).json({user : tokenUser, msg : "İşlem başarılı"});
 }
 

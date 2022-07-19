@@ -24,10 +24,20 @@ const UserSchema = new mongoose.Schema({
             message : "Email doğru bir formatta değil"
         }
     },
+    username : {
+        type : String,
+        unique : true,
+        required : [true,"Lütfen kullanıcı adı giriniz"],
+        minLength : [5,"kullanıcı adı en az 5 karakter olmalıdır"],
+        maxLength : [25,"kullanıcı adı en fazla 25 karakter olmalıdır"]
+    },
     password : {
         type : String,
         required : [true,"Lütfen şifre giriniz"],
         minLength : [6,"Şifre en az 6 karakter olmalıdır"],
+    },
+    image : {
+        type : String,
     },
     role : {
         type : String,
@@ -39,13 +49,20 @@ const UserSchema = new mongoose.Schema({
         type : Boolean,
         default : false,
     },
-    verified : Date,
+    verifiedDate : Date,
     passwordToken:{
         type : String,
     },
     passwordTokenExpirationDate:{
         type:Date,
-    }
+    },
+    accountBlock : {
+        type : Boolean,
+        default : false,
+    },
+    blockingDate : {
+        type : Date,
+    },
 });
 
 UserSchema.pre('save', async function(){
