@@ -19,7 +19,9 @@ const getAllUsers = async (req,res) => {
 
 const getUser = async (req,res) => {
     const user = await User.findOne({username:req.params.id}).select('-password -verificationToken -__v')
-    .populate('blogs').populate('followers').populate('followed');
+    .populate({path:'blogs',match:{status : true}, select : '-__v'})
+    .populate('followers','-password -followers -followed -blogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate')
+    .populate('followed', '-password -followers -followed -blogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate');
     if (!user) throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
     //return successful message and data
     res.status(StatusCodes.OK).json({ user : user, msg : "İşlem başarılı" });
@@ -80,7 +82,7 @@ const subscribe = async (req,res) => {
         await followedUser.save()
         followingUser.followed.push(followedUser);
         await followingUser.save();
-        res.status(StatusCodes.OK).json({msg : `Tebrikler ${followedUser.name} isimli kullanıcıyı takip etmeye başladın`});
+        res.status(StatusCodes.OK).json({msg : `${followedUser.name} isimli kullanıcıyı takip etmeye başladın`});
     }else{
         //takip ediyorsa çıkart
         const followedUserIndex = followedUser.followers.indexOf(followingUser._id);

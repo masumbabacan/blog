@@ -99,7 +99,7 @@ const login = async (req,res) => {
     //attach cookies to response
     attachCookiesToResponse({res,user:tokenUser,refreshToken});
     //return successful message
-    res.status(StatusCodes.OK).json({user:tokenUser});
+    res.status(StatusCodes.OK).json({user: tokenUser, msg: 'Giriş başarılı'});
 }
 
 const logout = async (req,res) => {
