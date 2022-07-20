@@ -65,7 +65,6 @@ const login = async (req,res) => {
     if (!user) throw new CustomError.UnauthenticatedError("Geçersiz kimlik bilgileri");
     //password check
     const isPasswordCorrect = await user.comparePassword(password);
-    console.log(isPasswordCorrect)
     if (!isPasswordCorrect) throw new CustomError.BadRequestError("Geçersiz kimlik bilgileri");
     //verify account control
     if (!user.isVerified) throw new CustomError.UnauthenticatedError("Lütfen email adresinizi doğrulayın");

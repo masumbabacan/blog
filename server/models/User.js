@@ -64,18 +64,17 @@ const UserSchema = new mongoose.Schema({
         type : Date,
     },
     blogs: [{ type: mongoose.Types.ObjectId, ref: 'Blog' }],
-    subscribers: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
-    Isubscribed: [{ type: mongoose.Types.ObjectId, ref: 'User' }]
+    followers: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+    followed: [{ type: mongoose.Types.ObjectId, ref: 'User' }]
 });
 
 UserSchema.pre('save', async function(){
+    if (!this.isModified('password')) return;
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password,salt);
 });
 
 UserSchema.methods.comparePassword = async function(canditatePassword){
-    console.log(canditatePassword);
-    console.log(this.password)
     const isMatch = await bcrypt.compare(canditatePassword,this.password);
     return isMatch;
 }
