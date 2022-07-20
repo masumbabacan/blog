@@ -1,5 +1,4 @@
 const User = require("../models/User");
-const Blog = require("../models/Blog");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const {
@@ -20,7 +19,7 @@ const getAllUsers = async (req,res) => {
 
 const getUser = async (req,res) => {
     const user = await User.findOne({username:req.params.id}).select('-password -verificationToken -__v')
-    .populate('blogs');
+    .populate('blogs').populate('subscribers').populate('Isubscribed');
     if (!user) throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
     //return successful message and data
     res.status(StatusCodes.OK).json({ user : user, msg : "İşlem başarılı" });
@@ -68,10 +67,33 @@ const updateUserPassword = async (req,res) => {
     res.status(StatusCodes.OK).json({msg : "Şifre başarıyla güncellendi"});
 }
 
+const subscribe = async (req,res) => {
+    const subscriber = await User.findOne({_id : req.user.userId});
+    const user = await User.findOne({_id : req.params.id});
+    //takip etmiyorsa ekle
+    if (!user.subscribers.includes(subscriber._id)) {
+        user.subscribers.push(subscriber);
+        await user.save()
+        subscriber.Isubscribed.push(user);
+        subscriber.save();
+        res.status(StatusCodes.OK).json({msg : `Tebrikler ${user.name} isimli kullanıcıyı takip etmeye başladın`});
+    }else{
+        //takip ediyorsa çıkart
+        const index = user.subscribers.indexOf(subscriber._id);
+        user.subscribers.splice(index,1);
+        await user.save();
+        const index2 = subscriber.Isubscribed.indexOf(user._id);
+        subscriber.Isubscribed.splice(index2,1);
+        await subscriber.save();
+        res.status(StatusCodes.OK).json({msg : `${user.name} isimli kullanıcıyı takip etmeyi bıraktın`});
+    }
+}
+
 module.exports = {
     getAllUsers,
     getUser,
     showCurrentUser,
     updateUser,
-    updateUserPassword
+    updateUserPassword,
+    subscribe
 }

@@ -63,7 +63,9 @@ const UserSchema = new mongoose.Schema({
     blockingDate : {
         type : Date,
     },
-    blogs: [{ type: mongoose.Types.ObjectId, ref: 'Blog' }]
+    blogs: [{ type: mongoose.Types.ObjectId, ref: 'Blog' }],
+    subscribers: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+    Isubscribed: [{ type: mongoose.Types.ObjectId, ref: 'User' }]
 });
 
 UserSchema.pre('save', async function(){
@@ -72,6 +74,8 @@ UserSchema.pre('save', async function(){
 });
 
 UserSchema.methods.comparePassword = async function(canditatePassword){
+    console.log(canditatePassword);
+    console.log(this.password)
     const isMatch = await bcrypt.compare(canditatePassword,this.password);
     return isMatch;
 }
