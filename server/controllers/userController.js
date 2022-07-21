@@ -24,7 +24,7 @@ const getUser = async (req,res) => {
     .populate('followed', '-password -followers -followed -blogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate');
     if (!user) throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
     //return successful message and data
-    res.status(StatusCodes.OK).json({ user : user, msg : "İşlem başarılı" });
+    res.status(StatusCodes.OK).json({ user : user, numberOfFollowers : user.followers.length, numberOfFollowed : user.followed.length, msg : "İşlem başarılı" });
 }
 
 const showCurrentUser = async (req,res) => {
