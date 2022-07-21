@@ -19,56 +19,51 @@ const getAllBlogs = async (req,res) => {
     const skip = req.query.page * req.query.limit;
     const limit = req.query.limit;
     if (limit > 100) throw new CustomError.BadRequestError("Bir sayfada en fazla 100 kayıt görüntülenebilir");
-    //pull data with active status
-    const blogs = await Blog.find({},{},{skip : skip - limit, limit : limit}).populate({'path' : 'user', select : '_id name surname email role verified'});
-    //return successful message and data
+    const blogs = await Blog.find({deleteCompletely : false},{},{skip : skip - limit, limit : limit})
+    .populate({
+        'path' : 'user',
+        select : '-password -followers -followed -blogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate'
+    });
     res.status(StatusCodes.OK).json({ data : blogs, msg : "İşlem başarılı", NumberOfData : blogs.length });
 }
 
 const getBlog = async (req,res) => {
-    //retrieve the requested data
-    const blog = await Blog.findOne({_id : req.params.id, status : true}).populate({'path' : 'user', select : '_id name surname email role verified'});
-    //check data
+    const blog = await Blog.findOne({_id : req.params.id, deleteCompletely : false})
+    .populate({
+        'path' : 'user', 
+        select : '-password -followers -followed -blogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate'
+    });
     if (!blog) throw new CustomError.NotFoundError('Kayıt bulunamadı');
-    //return successful message and data
     res.status(StatusCodes.OK).json({ data : blog, msg : "İşlem başarılı" });
 }
 
 const updateBlog = async (req,res) => {
-    //retrieve the requested data
     const {name,content} = req.body;
-    //check data
     const blog = await Blog.findOne({_id : req.params.id});
     if (!blog) throw new CustomError.NotFoundError('Kayıt bulunamadı');
-    //authorization check of the person who wants to update
     checkPermissions(req.user,blog.user);
-    //If there is a picture in the request
-    if (req.files) {
-        //delete the old image of the data you want to update
-        await fileDelete(blog.image);
-        //upload new image
-        const image = await singleImageUpload(req);
-        //assign new image
-        blog.image = image;
-    }
-    //save information
     blog.name = name;
     blog.content = content;
     await blog.save();
-    //return successful message
+    if (req.files) {
+        await fileDelete(blog.image);
+        const image = await singleImageUpload(req);
+        blog.image = image;
+        await blog.save();
+    }
     res.status(StatusCodes.OK).json({ msg : "Blog başarıyla güncellendi" });
 }
 
 const deleteBlog = async (req,res) => {
-    //check data
     const blog = await Blog.findOne({_id : req.params.id});
     if (!blog) throw new CustomError.NotFoundError('Kayıt bulunamadı');
-    //authorization check of the person who wants to delete
     checkPermissions(req.user,blog.user);
-    //save information
-    blog.status = false;
+    blog.deleteCompletely = true;
     blog.save();
-    //return successful message
+    const user = await User.findOne({_id : req.user.userId});
+    const blogIndex = user.blogs.indexOf(blog._id);
+    user.blogs.splice(blogIndex,1);
+    await user.save();
     res.status(StatusCodes.OK).json({ msg : "Blog başarıyla silindi" });
 }
 
@@ -76,7 +71,7 @@ const authenticateUserBlogs = async (req,res) => {
     const skip = req.query.page * req.query.limit;
     const limit = req.query.limit;
     if (limit > 100) throw new CustomError.BadRequestError("Bir sayfada en fazla 100 kayıt görüntülenebilir");
-    const blogs = await Blog.find({user : req.user.userId},{},{skip : skip - limit, limit : limit}).select('-user');
+    const blogs = await Blog.find({user : req.user.userId, deleteCompletely : false},{},{skip : skip - limit, limit : limit}).select('-user');
     res.status(StatusCodes.OK).json({ data : blogs, msg : "İşlem başarılı", NumberOfData : blogs.length });
 }
 

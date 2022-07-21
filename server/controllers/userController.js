@@ -40,17 +40,18 @@ const updateUser = async (req,res) => {
     const user = await User.findOne({_id : req.user.userId});
     if (!user) throw new CustomError.NotFoundError('Kayıt bulunamadı');
     checkPermissions(req.user,user._id);
+    user.name = name;
+    user.surname = surname;
+    await user.save();
     if (req.files) {
         await fileDelete(user.image);
         const image = await singleImageUpload(req);
         user.image = image;
+        await user.save();
     }
-    user.name = name;
-    user.surname = surname;
-    await user.save();
     const tokenUser = createTokenUser(user);
     attachCookiesToResponse({res,user:tokenUser});
-    res.status(StatusCodes.OK).json({user : tokenUser, msg : "İşlem başarılı"});
+    res.status(StatusCodes.OK).json({msg : "Güncelleme işlemi başarılı"});
 }
 
 const updateUserPassword = async (req,res) => {

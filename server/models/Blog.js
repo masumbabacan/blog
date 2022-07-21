@@ -19,7 +19,11 @@ const BlogSchema = new mongoose.Schema({
     status : {
         type : Boolean,
         default : true, 
-    }
+    },
+    deleteCompletely : {
+        type : Boolean,
+        default : false,
+    },
 },{timestamps : true});
 
 module.exports = mongoose.model('Blog',BlogSchema);
