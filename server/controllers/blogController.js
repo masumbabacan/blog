@@ -31,10 +31,18 @@ const getBlog = async (req,res) => {
     const blog = await Blog.findOne({_id : req.params.id, deleteCompletely : false})
     .populate({
         'path' : 'user', 
-        select : '-password -followers -followed -blogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate'
+        select : '-password -followers -followed -blogs -likedBlogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate'
+    })
+    .populate({
+        path : 'likes',
+        select : '-password -followers -followed -blogs -likedBlogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate'
     });
     if (!blog) throw new CustomError.NotFoundError('Kayıt bulunamadı');
-    res.status(StatusCodes.OK).json({ data : blog, msg : "İşlem başarılı" });
+    res.status(StatusCodes.OK).json({ 
+        data : blog, 
+        likeLength : blog.likes.length,
+        msg : "İşlem başarılı" 
+    });
 }
 
 const updateBlog = async (req,res) => {
@@ -71,8 +79,34 @@ const authenticateUserBlogs = async (req,res) => {
     const skip = req.query.page * req.query.limit;
     const limit = req.query.limit;
     if (limit > 100) throw new CustomError.BadRequestError("Bir sayfada en fazla 100 kayıt görüntülenebilir");
-    const blogs = await Blog.find({user : req.user.userId, deleteCompletely : false},{},{skip : skip - limit, limit : limit}).select('-user');
+    const blogs = await Blog.find({user : req.user.userId, deleteCompletely : false},{},{skip : skip - limit, limit : limit}).select('-user').populate({
+        path : 'likes',
+        select : '-password -followers -followed -blogs -likedBlogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate'
+    });
     res.status(StatusCodes.OK).json({ data : blogs, msg : "İşlem başarılı", NumberOfData : blogs.length });
+}
+
+const like = async (req,res) => {
+    const userLiked = await User.findOne({_id : req.user.userId});
+    const likedBlog = await Blog.findOne({_id : req.params.id});;
+
+    if (!userLiked.likedBlogs.includes(likedBlog._id)) {
+        userLiked.likedBlogs.push(likedBlog);
+        await userLiked.save()
+        likedBlog.likes.push(userLiked);
+        await likedBlog.save();
+        res.status(StatusCodes.OK).json({msg : `${likedBlog.name} isimli yazıyı beğendin`});
+    }else{
+        //takip ediyorsa çıkart
+        const userLikedIndex = likedBlog.likes.indexOf(userLiked._id);
+        likedBlog.likes.splice(userLikedIndex,1);
+        await likedBlog.save();
+        const likedBlogIndex = userLiked.likedBlogs.indexOf(likedBlog._id);
+        userLiked.likedBlogs.splice(likedBlogIndex,1);
+        await userLiked.save();
+        res.status(StatusCodes.OK).json({msg : `${likedBlog.name} isimli yazıdaki beğeniyi geri çektin`});
+    }
+
 }
 
 module.exports = {
@@ -81,7 +115,8 @@ module.exports = {
     getBlog,
     updateBlog,
     deleteBlog,
-    authenticateUserBlogs
+    authenticateUserBlogs,
+    like
 }
 
 

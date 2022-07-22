@@ -65,7 +65,8 @@ const UserSchema = new mongoose.Schema({
     },
     blogs: [{ type: mongoose.Types.ObjectId, ref: 'Blog' }],
     followers: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
-    followed: [{ type: mongoose.Types.ObjectId, ref: 'User' }]
+    followed: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+    likedBlogs: [{ type: mongoose.Types.ObjectId, ref: 'Blog' }],
 });
 
 UserSchema.pre('save', async function(){

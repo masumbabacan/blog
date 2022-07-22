@@ -18,13 +18,23 @@ const getAllUsers = async (req,res) => {
 }
 
 const getUser = async (req,res) => {
-    const user = await User.findOne({username:req.params.id}).select('-password -verificationToken -__v')
-    .populate({path:'blogs',match:{status : true}, select : '-__v'})
-    .populate('followers','-password -followers -followed -blogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate')
-    .populate('followed', '-password -followers -followed -blogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate');
+    const populate = {
+        path : req.query.tab,
+        options : { skip : req.query.page * 30 - 30, limit : 30 },
+        match : { status : true },
+        select : '-__v -password -followers -followed -blogs -likes -likedBlogs -verificationToken -passwordToken -passwordTokenExpirationDate',
+    }
+    if (!req.query.tab) populate.path = 'blogs';
+    const user = await User.findOne({username:req.params.id}).select('-__v -password -passwordExpirationDate -isVerified -accountBlock -verificationToken').populate(populate);
     if (!user) throw new CustomError.NotFoundError("Kullanıcı Bulunamadı");
-    //return successful message and data
-    res.status(StatusCodes.OK).json({ user : user, numberOfFollowers : user.followers.length, numberOfFollowed : user.followed.length, msg : "İşlem başarılı" });
+    res.status(StatusCodes.OK).json({ 
+        user : user, 
+        blogLength : user.blogs.length, 
+        followersLength : user.followers.length, 
+        followedLength : user.followed.length, 
+        likedBlogsLength : user.likedBlogs.length, 
+        msg : "İşlem başarılı" 
+    });
 }
 
 const showCurrentUser = async (req,res) => {

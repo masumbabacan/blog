@@ -7,11 +7,13 @@ const {
     getBlog, 
     updateBlog, 
     deleteBlog, 
-    authenticateUserBlogs, 
+    authenticateUserBlogs,
+    like,
 } = require("../controllers/blogController");
 
 
 router.get("/",getAllBlogs); //get all data
+router.get("/like/:id",authenticateUser,like); //get all data
 router.get("/authenticateUserBlogs",authenticateUser,authenticateUserBlogs); //get all data
 router.get("/:id",getBlog); //get single data
 router.post("/",authenticateUser,createBlog); //create data
