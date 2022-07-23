@@ -16,21 +16,24 @@ const createBlog = async (req,res) => {
 };
 
 const getAllBlogs = async (req,res) => {
-    const skip = req.query.page * req.query.limit;
-    const limit = req.query.limit;
-    if (limit > 100) throw new CustomError.BadRequestError("Bir sayfada en fazla 100 kayıt görüntülenebilir");
-    const blogs = await Blog.find({deleteCompletely : false},{},{skip : skip - limit, limit : limit})
+    const skip = req.query.page * 30;
+    const limit = 30;
+    const blogs = await Blog.find({status:true,deleteCompletely : false},{},{skip : skip - limit, limit : limit}).select('-deleteCompletely -status')
     .populate({
-        'path' : 'user',
-        select : '-password -followers -followed -blogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate'
+        path : 'user',
+        select : '-password -followers -followed -blogs -likedBlogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate'
+    })
+    .populate({
+        path : 'likes',
+        select : '-password -followers -followed -blogs -likedBlogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate'
     });
-    res.status(StatusCodes.OK).json({ data : blogs, msg : "İşlem başarılı", NumberOfData : blogs.length });
+    res.status(StatusCodes.OK).json({ data : blogs, NumberOfData : blogs.length, msg : "İşlem başarılı"});
 }
 
 const getBlog = async (req,res) => {
-    const blog = await Blog.findOne({_id : req.params.id, deleteCompletely : false})
+    const blog = await Blog.findOne({_id : req.params.id, deleteCompletely : false, status : true}).select('-deleteCompletely -status')
     .populate({
-        'path' : 'user', 
+        path : 'user',
         select : '-password -followers -followed -blogs -likedBlogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate'
     })
     .populate({
@@ -63,15 +66,11 @@ const updateBlog = async (req,res) => {
 }
 
 const deleteBlog = async (req,res) => {
-    const blog = await Blog.findOne({_id : req.params.id});
+    const blog = await Blog.findOne({_id : req.params.id,deleteCompletely : false});
     if (!blog) throw new CustomError.NotFoundError('Kayıt bulunamadı');
     checkPermissions(req.user,blog.user);
     blog.deleteCompletely = true;
     blog.save();
-    const user = await User.findOne({_id : req.user.userId});
-    const blogIndex = user.blogs.indexOf(blog._id);
-    user.blogs.splice(blogIndex,1);
-    await user.save();
     res.status(StatusCodes.OK).json({ msg : "Blog başarıyla silindi" });
 }
 

@@ -24,16 +24,16 @@ const register = async (req,res) => {
     if (usernameExist) throw new CustomError.BadRequestError("Bu kullanıcı adı daha önceden alınmış");
     //Generating tokens for email verification
     const verificationToken = crypto.randomBytes(40).toString('hex');
-    //save data
-    const user = await User.create({name,surname,email,username,password,verificationToken});
     //Creating the necessary information to send an email
     const origin = 'http://localhost:3000/api/v1/auth';
     await sendVerificationEmail({
-        name : user.name,
-        email : user.email,
-        verificationToken : user.verificationToken,
+        name : name,
+        email : email,
+        verificationToken : verificationToken,
         origin : origin,
     });
+    //save data
+    const user = await User.create({name,surname,email,username,password,verificationToken});
     //return successful message
     res.status(StatusCodes.CREATED).json({msg : "İşlem başarılı! Lütfen hesabınızı doğrulamak için e-postanızı kontrol edin"});
 }

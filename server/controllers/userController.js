@@ -21,7 +21,7 @@ const getUser = async (req,res) => {
     const populate = {
         path : req.query.tab,
         options : { skip : req.query.page * 30 - 30, limit : 30 },
-        match : { status : true },
+        match : { status : true, deleteCompletely:false },
         select : '-__v -password -followers -followed -blogs -likes -likedBlogs -verificationToken -passwordToken -passwordTokenExpirationDate',
     }
     if (!req.query.tab) populate.path = 'blogs';
