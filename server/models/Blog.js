@@ -46,12 +46,12 @@ BlogSchema.pre('save', async function(next){
     );
 });
 
-BlogSchema.post('save', async function(doc,next){
-    this.model('User').updateOne(
-        { },
-        { $push: { blogs: [doc._id] } },
-        next
-    );
-});
+// BlogSchema.post('save', async function(doc,next){
+//     this.model('User').updateOne(
+//         { },
+//         { $push: { blogs: [doc._id] } },
+//         next
+//     );
+// });
 
 module.exports = mongoose.model('Blog',BlogSchema);
