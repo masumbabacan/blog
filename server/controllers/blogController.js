@@ -9,7 +9,9 @@ const createBlog = async (req,res) => {
     const image = await singleImageUpload(req);
     const user = await User.findOne({_id : req.user.userId});
     if (!user) throw new CustomError.NotFoundError('Kayıt sırasına hata oluştu');
-    await Blog.create({name,content,image,user : user._id});
+    const blog = await Blog.create({name,content,image,user : user._id});
+    user.blogs.push(blog);
+    await user.save();
     res.status(StatusCodes.CREATED).json({msg : 'Kayıt başarıyla eklendi'});
 };
 
