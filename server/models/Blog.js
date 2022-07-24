@@ -24,7 +24,7 @@ const BlogSchema = new mongoose.Schema({
         type : Boolean,
         default : false,
     },
-    likes: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+    likes: [{ type: mongoose.Types.ObjectId, ref: 'User' }], 
 },{timestamps : true});
 
 //blogu silerken beğenen kullanıcıların beğenilerinden de silme

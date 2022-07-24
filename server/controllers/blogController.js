@@ -12,8 +12,9 @@ const createBlog = async (req,res) => {
     const blog = await Blog.create({name,content,image,user : user._id});
     user.blogs.push(blog);
     await user.save();
-    res.status(StatusCodes.CREATED).json({msg : 'Kayıt başarıyla eklendi'});
+    res.status(StatusCodes.CREATED).json({msg : 'Kayıt başarıyla eklendi'});  
 };
+
 
 const getAllBlogs = async (req,res) => {
     const skip = req.query.page * 30;
