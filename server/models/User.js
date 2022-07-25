@@ -24,10 +24,20 @@ const UserSchema = new mongoose.Schema({
             message : "Email doğru bir formatta değil"
         }
     },
+    username : {
+        type : String,
+        unique : true,
+        required : [true,"Lütfen kullanıcı adı giriniz"],
+        minLength : [5,"kullanıcı adı en az 5 karakter olmalıdır"],
+        maxLength : [25,"kullanıcı adı en fazla 25 karakter olmalıdır"]
+    },
     password : {
         type : String,
         required : [true,"Lütfen şifre giriniz"],
         minLength : [6,"Şifre en az 6 karakter olmalıdır"],
+    },
+    image : {
+        type : String,
     },
     role : {
         type : String,
@@ -37,7 +47,7 @@ const UserSchema = new mongoose.Schema({
     verificationToken : String,
     isVerified : {
         type : Boolean,
-        default : false,
+        default : true,
     },
     verified : Date,
     passwordToken:{
@@ -45,10 +55,22 @@ const UserSchema = new mongoose.Schema({
     },
     passwordTokenExpirationDate:{
         type:Date,
-    }
+    },
+    accountBlock : {
+        type : Boolean,
+        default : false,
+    },
+    blockingDate : {
+        type : Date,
+    },
+    blogs: [{ type: mongoose.Types.ObjectId, ref: 'Blog' }],
+    followers: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+    followed: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+    likedBlogs: [{ type: mongoose.Types.ObjectId, ref: 'Blog' }],
 });
 
 UserSchema.pre('save', async function(){
+    if (!this.isModified('password')) return;
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password,salt);
 });

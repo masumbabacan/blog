@@ -14,7 +14,36 @@ const BlogSchema = new mongoose.Schema({
     },
     image : {
         type : String,
-    }
+    },
+    user: { type: mongoose.Types.ObjectId, ref: 'User', required : true },
+    status : {
+        type : Boolean,
+        default : true, 
+    },
+    deleteCompletely : {
+        type : Boolean,
+        default : false,
+    },
+    likes: [{ type: mongoose.Types.ObjectId, ref: 'User' }], 
 },{timestamps : true});
+
+//blogu silerken beğenen kullanıcıların beğenilerinden de silme
+BlogSchema.pre('save', async function(next){
+    if (!this.isModified('deleteCompletely')) return;
+    this.model('User').updateMany(
+        { },
+        { $pullAll: { likedBlogs: [this._id] } },
+        next
+    );
+});
+//blogu silerken blog yazarının blog listesinden de silme
+BlogSchema.pre('save', async function(next){
+    if (!this.isModified('deleteCompletely')) return;
+    this.model('User').updateOne(
+        { },
+        { $pullAll: { blogs: [this._id] } },
+        next
+    );
+});
 
 module.exports = mongoose.model('Blog',BlogSchema);
