@@ -30,7 +30,7 @@ const register = async (req,res) => {
     });
     res.status(StatusCodes.CREATED).json({msg : "İşlem başarılı! Lütfen hesabınızı doğrulamak için e-postanızı kontrol edin"});
 }
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
+
 const verifyEmail = async (req,res) => {
     const {verificationToken,email} = req.body;
     const user = await User.findOne({email});

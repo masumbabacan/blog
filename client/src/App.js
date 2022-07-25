@@ -3,21 +3,21 @@ import Home from "./pages/Home";
 import Page404 from "./pages/Page404";
 import { Routes, Route, Link, NavLink } from 'react-router-dom';
 import UsersAll from "./pages/UsersAll";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 const App = () => { 
   return (
     <>
-    <nav>
-      <NavLink to="/">Anasayfa</NavLink>
-      <NavLink to="/login">Giriş Yap</NavLink>
-      <NavLink to="/userall">Tüm kullanıcılar</NavLink>
-    </nav>
+    <Navbar/>
     <Routes>
       <Route path="/" element={<Home />}/>
       <Route path="/login" element={<Login />}/>
+      <Route path="/blog/:id" element={<Page404 />}/>
       <Route path="/userall" element={<UsersAll />}/>
       <Route path="*" element={<Page404 />}/>
     </Routes>
+    <Footer/>
     </>
   );
 }

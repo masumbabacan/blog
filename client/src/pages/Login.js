@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import '../styles/login.css'
-import '../styles/reset.css'
+import '../assets/styles/login.css'
+import '../assets/styles/reset.css'
 
 const Login = () => {
     const [email, setEmail] = useState('')
