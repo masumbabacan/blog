@@ -13,19 +13,19 @@ function BlogCard(props) {
                 <img src={require(`../assets/images/${image}`)}/>
             </div>
             <div className="post-card-content">
-                <a href="blog-grid.html" className="categorie">Travel</a>
+                <a href="#" className="categorie">Travel</a>
                 <h5>
-                    <a href="post-default.html">The Best Cities to Travel Alone in the USA</a>
+                    <a href="#">The Best Cities to Travel Alone in the USA</a>
                 </h5>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit quam atque ipsa laborum sunt distinctio...
+                <p className='explanation'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit quam atque ipsa laborum sunt distinctio.Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit quam atque ipsa laborum sunt distinctio...
                 </p>
                 <div className="post-card-info">
                     <ul className="list-inline">
-                        <li>
-                            
+                        <li className='profile-photo'>
+                            <img src={require('../assets/images/27.jpg')}/>
                         </li>
                         <li>
-                            <a href="author.html">David Smith</a>
+                            <a href="#">David Smith</a>
                         </li>
                         <li className="dot"></li>
                         <li>January 15, 2021</li>

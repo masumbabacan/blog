@@ -5,18 +5,16 @@ import '../assets/styles/reset.css';
 function Footer() {
   return (
     <>
-        <section className="newslettre">
-        <div className="container-fluid">
-            <div className="newslettre-width text-center">
+    <section className="newslettre">
+        <div className="container">
+            <div className="newslettre-width">
                 <div className="newslettre-info">
                     <h5>Subscribe to our Newslatter</h5>
                     <p> Sign up for free and be the first to get notified about new posts. </p>
-                </div>
+                 </div>
                 <form action="#" className="newslettre-form">
                     <div className="form-flex">
-                        <div className="form-group">
-                             </div>
-                        <button className="submit-btn" type="submit">Subscribe</button>
+                        <input type="text"/><button className="submit-btn" type="submit">Subscribe</button>
                     </div>
                 </form>
                 <div className="social-icones">
