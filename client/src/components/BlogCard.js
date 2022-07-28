@@ -8,6 +8,7 @@ function BlogCard(props) {
     const blogName = props.name;
     const blogContent = props.content;
     const date = props.date;
+    
     const userName = props.userName;
 
   return (
@@ -32,7 +33,7 @@ function BlogCard(props) {
                             <Link to="/blog/:id">{userName}</Link>
                         </li>
                         <li className="dot"></li>
-                        <li>{date}</li>
+                        <li>{date.slice(0, 10)}</li>
                     </ul>
                 </div>
             </div>

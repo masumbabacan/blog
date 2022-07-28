@@ -8,26 +8,14 @@ function Navbar() {
     <nav className='navbar'>
         <div className='navbar-container'>
             <div className='navbar-logo'>
-             <NavLink to="/">LOGO</NavLink>
+             <NavLink to="/">
+                <img src={require('../assets/images/logo.png')}/>
+             </NavLink>
             </div>
             <div className='navbar-collapse'>
-                <ul>
-                    <li>
-                        link1
-                    </li>
-                    <li>
-                        link2
-                    </li>
-                    <li>
-                        link3
-                    </li>
-                    <li>
-                        link4
-                    </li>
-                </ul>
+                 <NavLink to="/login"></NavLink>
             </div>
             <div className='navbar-right'>
-                right
                 <NavLink to="/login">Giriş Yap</NavLink>
             </div>
         </div>

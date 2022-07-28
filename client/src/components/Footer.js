@@ -15,7 +15,7 @@ function Footer() {
                  </div>
                 <form action="#" className="newslettre-form">
                     <div className="form-flex">
-                        <input type="text"/><button className="submit-btn" type="submit">Subscribe</button>
+                        <input type="text" placeholder='E-mail adresin'/><button className="submit-btn" type="submit">Subscribe</button>
                     </div>
                 </form>
                 <div className="social-icones">
@@ -43,7 +43,7 @@ function Footer() {
     </section>
 
     <footer className="footer">
-        <div className="container-fluid">
+        <div className="container">
             <div className="row">
                 <div className="col-lg-12">
                     <div className="copyright">

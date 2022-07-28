@@ -20,6 +20,8 @@
 }
 .card .post-card .post-card-image img{
     width: 100%;
+    height: inherit;
+    object-fit: cover;
     transition: 600ms;
 }
 .card .post-card .post-card-image img:hover{

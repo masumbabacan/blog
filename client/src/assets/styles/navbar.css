@@ -1,5 +1,5 @@
 .navbar{
-    padding: 15px 15px;
+    padding:10px;
     background-color: #2B2B2B;
     color: #ffffff;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
@@ -13,6 +13,9 @@
 .navbar-container .navbar-logo{
     font-size: 20px;
 }
+.navbar-container .navbar-logo img{
+    width: 50px;
+}
 .navbar-container a{
     color: #F67280;
 }
@@ -21,4 +24,17 @@
 }
 .navbar-container .navbar-collapse ul li{
     margin-left: 2rem;
+}
+.navbar-container .navbar-right{
+    border: 1px solid #ffffff;
+    padding: 5px 1rem;
+    border-radius: 20px;
+    transition: 300ms;
+}
+.navbar-container .navbar-right a{
+    color: #ffffff;
+}
+.navbar-container .navbar-right:hover{
+    border-color: #F67280;
+    background-color: #F67280;
 }
