@@ -5,30 +5,34 @@ import '../assets/styles/reset.css';
 
 function BlogCard(props) {
     const image = props.img;
+    const blogName = props.name;
+    const blogContent = props.content;
+    const date = props.date;
+    const userName = props.userName;
+
   return (
     <Link to="/blog/:id">
     <div className="card">
         <div className="post-card">
             <div className="post-card-image">
-                <img src={require(`../assets/images/${image}`)}/>
+                <img src={'http://localhost:3000'+image}/>
             </div>
             <div className="post-card-content">
-                <a href="#" className="categorie">Travel</a>
+                <Link to="/blog/:id" className="categorie">Travel</Link>
                 <h5>
-                    <a href="#">The Best Cities to Travel Alone in the USA</a>
+                    <Link to="/blog/:id">{blogName}</Link>
                 </h5>
-                <p className='explanation'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit quam atque ipsa laborum sunt distinctio.Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit quam atque ipsa laborum sunt distinctio...
-                </p>
+                <p className='explanation'>{blogContent}</p>
                 <div className="post-card-info">
                     <ul className="list-inline">
                         <li className='profile-photo'>
                             <img src={require('../assets/images/27.jpg')}/>
                         </li>
                         <li>
-                            <a href="#">David Smith</a>
+                            <Link to="/blog/:id">{userName}</Link>
                         </li>
                         <li className="dot"></li>
-                        <li>January 15, 2021</li>
+                        <li>{date}</li>
                     </ul>
                 </div>
             </div>

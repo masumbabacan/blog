@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import '../assets/styles/footer.css';
 import '../assets/styles/reset.css';
 
@@ -20,20 +21,20 @@ function Footer() {
                 <div className="social-icones">
                     <ul className="list-inline">
                         <li>
-                            <a href="#">
-                                <i className="fab fa-facebook-f"></i>Facebook</a>
+                            <Link to='#'>
+                                <i className="fab fa-facebook-f"></i>Facebook</Link>
                         </li>
                         <li>
-                            <a href="#">
-                                <i className="fab fa-twitter"></i>Twitter </a>
+                            <Link to='#'>
+                                <i className="fab fa-twitter"></i>Twitter </Link>
                         </li>
                         <li>
-                            <a href="#">
-                                <i className="fab fa-instagram"></i>Instagram </a>
+                            <Link to='#'>
+                                <i className="fab fa-instagram"></i>Instagram </Link>
                         </li>
                         <li>
-                            <a href="#">
-                                <i className="fab fa-youtube"></i>Youtube</a>
+                            <Link to='#'>
+                                <i className="fab fa-youtube"></i>Youtube</Link>
                         </li>
                     </ul>
                 </div>
@@ -46,12 +47,12 @@ function Footer() {
             <div className="row">
                 <div className="col-lg-12">
                     <div className="copyright">
-                        <p>© Copyright 2021  <a href="#">AssiaGroupe</a> , All rights reserved.</p>
+                        <p>© Copyright 2021  <Link to='#'>AssiaGroupe</Link> , All rights reserved.</p>
                     </div>
                     <div className="back">
-                        <a href="#" className="back-top">
+                        <Link to='#' className="back-top">
                             <i className="arrow_up"></i>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

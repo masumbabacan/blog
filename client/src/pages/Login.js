@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import '../assets/styles/login.css'
 import '../assets/styles/reset.css'
+import { Link } from 'react-router-dom'
 
 const Login = () => {
     const [email, setEmail] = useState('')
@@ -51,12 +52,12 @@ const Login = () => {
                         name='password'
                         onChange={handlePassword}
                     />
-                    <a href='#'>Şifreni mi unuttun?</a>
+                    <Link to='#'>Şifreni mi unuttun?</Link>
 
                     <button type='submit'>Giriş Yap</button>
                     
                     <label className='login-not-account'>Hesabın yok mu?</label>
-                    <a href='#'>Kayıt ol</a>
+                    <Link to='#'>Kayıt ol</Link>
                </form>
             </div>
         </div>
