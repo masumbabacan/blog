@@ -1,0 +1,24 @@
+.navbar{
+    padding: 15px 15px;
+    background-color: #2B2B2B;
+    color: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.navbar-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.navbar-container .navbar-logo{
+    font-size: 20px;
+}
+.navbar-container a{
+    color: #F67280;
+}
+.navbar-container .navbar-collapse ul{
+    display: flex;
+}
+.navbar-container .navbar-collapse ul li{
+    margin-left: 2rem;
+}

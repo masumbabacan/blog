@@ -22,11 +22,7 @@ function Home() {
 
       {blogs.map((data) => {
         return (
-         
           <BlogCard img={data.image} name={data.name} content={data.content} date={data.updatedAt} userName={data.user.name +' ' +data.user.surname}/>
-
-          
-
         )
       })}
 

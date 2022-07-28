@@ -1,0 +1,15 @@
+.newslettre, .footer{
+    width: 100%;
+    background-color: #2B2B2B;
+}
+.footer{
+    border-top: 1px solid #3f3f3f;
+}
+
+.newslettre .container .newslettre-width{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}

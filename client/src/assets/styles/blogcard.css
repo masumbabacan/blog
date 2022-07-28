@@ -1,0 +1,72 @@
+.card{
+    background-color: #2B2B2B;
+    width: 300px;
+    padding: 20px;
+    margin: 20px;
+    margin-bottom: 60px;
+    border-radius: 20px;
+}
+.card a{
+    color: #ffffff;
+}
+.card .post-card .post-card-image{
+    margin-top: -60px;
+    height: 200px;
+    object-fit: cover;
+    margin-bottom: 40px;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.card .post-card .post-card-image img{
+    width: 100%;
+    transition: 600ms;
+}
+.card .post-card .post-card-image img:hover{
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+.card .post-card .post-card-content .categorie{
+    background-color: #F67280;
+    padding: 2px 15px;
+    border-radius: 10px;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 220px;
+}
+.card .post-card .post-card-content h5{
+    margin: 1rem 0;
+    font-size: 1.3rem;
+}
+.card .post-card .post-card-content .explanation{
+    color: #D9D9D4;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical; 
+    overflow:hidden;
+
+}
+
+.card .post-card .post-card-content .post-card-info ul{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 14px;
+    margin-top: 2rem;
+    color: #D9D9D4;
+}
+.card .post-card .post-card-content .post-card-info ul .dot{
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    background-color: #F67280;
+}
+.card .post-card .post-card-content .post-card-info ul .profile-photo img{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 100%;
+}
