@@ -12,7 +12,7 @@
 .card .post-card .post-card-image{
     margin-top: -60px;
     height: 200px;
-    object-fit: cover;
+    object-fit: contain;
     margin-bottom: 40px;
     position: relative;
     border-radius: 20px;
@@ -21,7 +21,7 @@
 .card .post-card .post-card-image img{
     width: 100%;
     height: inherit;
-    object-fit: cover;
+    object-fit: contain;
     transition: 600ms;
 }
 .card .post-card .post-card-image img:hover{
