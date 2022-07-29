@@ -17,7 +17,7 @@ const App = () => {
       <Route path="/userall" element={<UsersAll />}/>
       <Route path="*" element={<Page404 />}/>
     </Routes>
-    <Footer/>
+    {/* <Footer/> */}
     </>
   );
 }

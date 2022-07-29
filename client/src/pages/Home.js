@@ -20,7 +20,7 @@ function Home() {
   return (
     <section>
       <div className='leftBar'>
-        masum
+        <div className='left-content'>Masum</div>
       </div>
       <div className='content'>
         {blogs.map((data) => {
@@ -29,9 +29,9 @@ function Home() {
           )
         })}
       </div>
-      <div className='rightBar'>
-        masum
-      </div>
+      {/* <div className='rightBar'>
+        <div className='right-content'>Masum</div>
+      </div> */}
     </section>
   )
 }

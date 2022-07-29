@@ -13,7 +13,6 @@
 .card .post-card .post-card-image{
     width: 20%;
     /* height: 200px; */
-    object-fit: contain;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,8 +25,9 @@
 }
 .card .post-card .post-card-image img{
     width: 100%;
-    height: inherit;
-    object-fit: contain;
+    height: 80% !important;
+    vertical-align: middle;
+    object-fit: cover;
     transition: 600ms;
     border-radius: 10px;
     position: absolute;
@@ -45,17 +45,16 @@
 
 .card .post-card .post-card-content .categories{
     width: 100%;
-    padding: 10px;
 }
 
 .card .post-card .post-card-content .categorie{
     background-color: #F67280;
-    padding: 2px 15px;
+    padding: 0px 15px;
     border-radius: 10px;
     color: #ffffff;
     font-weight: 500;
     font-size: 14px;
-    margin: 0 5px;
+    margin-right: 5px;
 }
 .card .post-card .post-card-content h5{
     margin: 1rem 0;
@@ -86,7 +85,7 @@
     color: #D9D9D4;
 }
 .card .post-card .post-card-content .post-card-info ul li{
-    margin: 0 5px;
+    margin-right: 10px;
 }
 .card .post-card .post-card-content .post-card-info ul .dot{
     width: 5px;
@@ -96,7 +95,7 @@
 }
 .card .post-card .post-card-content .post-card-info ul .profile-photo{
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
 }
 .card .post-card .post-card-content .post-card-info ul .profile-photo img{
