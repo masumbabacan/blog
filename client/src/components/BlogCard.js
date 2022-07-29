@@ -19,22 +19,29 @@ function BlogCard(props) {
                 <img src={'http://localhost:3000'+image}/>
             </div>
             <div className="post-card-content">
-                <Link to="/blog/:id" className="categorie">Travel</Link>
-                <h5>
-                    <Link to="/blog/:id">{blogName}</Link>
-                </h5>
-                <p className='explanation'>{blogContent}</p>
+                <div className='categories'>
+                    <Link to="/blog/:id" className="categorie">Seyahat</Link>
+                    <Link to="/blog/:id" className="categorie">Tarih</Link>
+                </div>
+                <div className='writing'>
+                    <h5>
+                        <Link to="/blog/:id">{blogName}</Link>
+                    </h5>
+                    <p className='explanation'>{blogContent}</p>
+                </div>
                 <div className="post-card-info">
                     <ul className="list-inline">
                         <li className='profile-photo'>
                             <img src={require('../assets/images/27.jpg')}/>
                         </li>
+                        <li className="dot"></li>
                         <li>
                             <Link to="/blog/:id">{userName}</Link>
                         </li>
-                        <li className="dot"></li>
-                        <li>{date.slice(0, 10)}</li>
+                        {/* <li className="dot"></li>
+                        <li>{date.slice(0, 10)}</li> */}
                     </ul>
+                    <span className='blogDate'>{date.slice(0, 10)}</span>
                 </div>
             </div>
         </div>

@@ -19,13 +19,19 @@ function Home() {
 
   return (
     <section>
+      <div className='leftBar'>
+        masum
+      </div>
       <div className='content'>
-      {blogs.map((data) => {
-        return (
-          <BlogCard img={data.image} name={data.name} content={data.content} date={data.updatedAt} userName={data.user.name +' ' +data.user.surname}/>
-        )
-      })}
-    </div>
+        {blogs.map((data) => {
+          return (
+            <BlogCard img={data.image} name={data.name} content={data.content} date={data.updatedAt} userName={data.user.name +' ' +data.user.surname}/>
+          )
+        })}
+      </div>
+      <div className='rightBar'>
+        masum
+      </div>
     </section>
   )
 }
