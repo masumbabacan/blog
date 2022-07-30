@@ -25,13 +25,13 @@ function Home() {
       <div className='content'>
         {blogs.map((data) => {
           return (
-            <BlogCard img={data.image} name={data.name} content={data.content} date={data.updatedAt} userName={data.user.name +' ' +data.user.surname}/>
+            <BlogCard id={data._id} img={data.image} name={data.name} content={data.content} date={data.updatedAt} userProfileName={data.user.username} userName={data.user.name +' ' +data.user.surname}/>
           )
         })}
       </div>
-      {/* <div className='rightBar'>
+      <div className='rightBar'>
         <div className='right-content'>Masum</div>
-      </div> */}
+      </div>
     </section>
   )
 }

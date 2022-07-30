@@ -19,7 +19,7 @@ const createBlog = async (req,res) => {
 const getAllBlogs = async (req,res) => {
     const skip = req.query.page * 30;
     const limit = 30;
-    const blogs = await Blog.find({status:true,deleteCompletely : false},{},{skip : skip - limit, limit : limit}).select('-deleteCompletely -status')
+    const blogs = await Blog.find({status:true,deleteCompletely : false},{},{skip : skip - limit, limit : limit}).select('-deleteCompletely -status').sort({createdAt : 'desc'})
     .populate({
         path : 'user',
         select : '-password -followers -followed -blogs -likedBlogs -__v -verificationToken -passwordToken -passwordTokenExpirationDate'

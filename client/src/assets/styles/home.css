@@ -5,16 +5,18 @@ section{
 }
 
 .leftBar{
-    width: 40%;
+    width: 20%;
     padding-top: 60px;
-    position: relative;
+    position: relative; 
 }
 .leftBar .left-content{
     position: sticky;
     top: 2%;
-    border: 1px solid;
     width: 100%;
     min-height: 100vh;
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid;
 }
 
 .rightBar{
@@ -24,13 +26,15 @@ section{
 .rightBar .right-content{
     position: sticky;
     top: 2%;
-    border: 1px solid;
     width: 100%;
     min-height: 100vh;
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid;
 }
 
 .content{
-    width: 60%;
+    width: 50%;
     padding:60px 50px 0 70px;
     min-height: 100vh;
 }
