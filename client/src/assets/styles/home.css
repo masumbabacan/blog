@@ -28,9 +28,9 @@ section{
     top: 2%;
     width: 100%;
     min-height: 100vh;
+    border: 1px solid;
     border-radius: 20px;
     padding: 20px;
-    border: 1px solid;
 }
 
 .content{
