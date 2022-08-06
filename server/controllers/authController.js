@@ -3,7 +3,6 @@ const Token = require("../models/Token");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const crypto = require('crypto');
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 const { 
     attachCookiesToResponse, 
     createTokenUser, 
