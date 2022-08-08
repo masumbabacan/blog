@@ -12,12 +12,12 @@ const {
 } = require("../controllers/blogController");
 
 
-router.get("/",getAllBlogs); //get all data
-router.get("/like/:id",authenticateUser,like); //get all data
-router.get("/authenticateUserBlogs",authenticateUser,authenticateUserBlogs); //get all data
-router.get("/:id",getBlog); //get single data
-router.post("/",authenticateUser,createBlog); //create data
-router.patch("/:id",authenticateUser,updateBlog); //update data
-router.delete("/:id",authenticateUser,deleteBlog); //delete data
+router.get("/",getAllBlogs);
+router.get("/like/:id",authenticateUser,like);
+router.get("/authenticateUserBlogs",authenticateUser,authenticateUserBlogs);
+router.get("/:id",getBlog);
+router.post("/",authenticateUser,createBlog);
+router.patch("/:id",authenticateUser,updateBlog);
+router.delete("/:id",authenticateUser,deleteBlog);
 
 module.exports = router;

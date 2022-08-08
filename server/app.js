@@ -17,6 +17,7 @@ const connectDB = require("./db/connect");
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
 const blogRouter = require("./routes/blogRoutes");
+const topicRouter = require("./routes/topicRoutes");
 
 
 //middleware
@@ -34,6 +35,7 @@ app.use(fileUpload());
 app.use("/api/v1/auth",authRouter);
 app.use("/api/v1/users",userRouter);
 app.use("/api/v1/blogs",blogRouter);
+app.use("/api/v1/topics",topicRouter);
 
 
 app.use(notFoundMiddleware);
