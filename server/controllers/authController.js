@@ -11,7 +11,7 @@ const {
     createHash,
     nullControl
 } = require("../utils/index");
-
+ 
 const register = async (req,res) => {
     const { email, name, surname,username, password } = req.body;
     const emailExist = await User.findOne({email});
