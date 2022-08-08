@@ -10,6 +10,6 @@ router.post("/login",login); //login
 router.post("/verify-email",verifyEmail); //email verify
 router.post("/forgot-password",forgotPassword); //forgot password
 router.post("/reset-password",resetPassword); //reset password
-router.delete("/logout",authenticateUser,logout); //log out
+router.delete("/logout",authenticateUser,logout); //logout
 
 module.exports = router;
