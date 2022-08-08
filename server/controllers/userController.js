@@ -96,11 +96,21 @@ const subscribe = async (req,res) => {
     }
 }
 
+const createRelatedTopic = async (req,res) => {
+    const topics = req.body.topics;
+    if (!topics) throw new CustomError.BadRequestError('En az bir tane konu seçmelisiniz');
+    const user = await User.findOne({_id : req.user.userId});
+    user.relatedTopics.push(...topics);
+    await user.save();
+    res.status(StatusCodes.OK).json({msg : "İşlem başarılı"});
+}
+
 module.exports = {
     getAllUsers,
     getUser,
     showCurrentUser,
     updateUser,
     updateUserPassword,
-    subscribe
+    subscribe,
+    createRelatedTopic
 }
