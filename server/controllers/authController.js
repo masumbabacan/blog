@@ -16,6 +16,8 @@ const {
 const register = async (req,res) => {
     //information required for registration
     const { email, name, surname,username, password } = req.body;
+
+    await nullControl([email, name, surname,username, password]);
     //email check
     const emailExist = await User.findOne({email});
     if (emailExist) throw new CustomError.BadRequestError("Bu email zaten kayıtlı");

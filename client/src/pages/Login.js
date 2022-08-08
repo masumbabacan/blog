@@ -5,12 +5,12 @@ import '../assets/styles/reset.css'
 import { Link } from 'react-router-dom'
 
 const Login = () => {
-    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
     const handleUserName = (e) => {
         console.log(e.target.value);
-        setEmail(e.target.value);
+        setUsername(e.target.value);
     }
     const handlePassword = (e) => {
         setPassword(e.target.value);
@@ -18,8 +18,9 @@ const Login = () => {
 
     const handleaSubmit= (e) => {
         e.preventDefault();
+        console.log(password);
         axios.post('http://localhost:3000/api/v1/auth/login', {
-            email: email,
+            username: username,
             password: password
         },{ withCredentials: true })
         .then((response) =>{
@@ -41,7 +42,7 @@ const Login = () => {
                 <input 
                         type='text'
                         placeholder='E-Posta'
-                        value={email}
+                        value={username}
                         name='email'
                         onChange={handleUserName}
                     />
