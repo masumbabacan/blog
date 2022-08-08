@@ -9,7 +9,7 @@ const {
     getTopic,
 } = require("../controllers/topicController");
 
-router.get("/",authenticateUser,authorizePermissions('admin'),getAllTopic);
+router.get("/",authenticateUser,authorizePermissions('admin','user'),getAllTopic);
 router.get("/:id",authenticateUser,authorizePermissions('admin'),getTopic);
 router.post("/",authenticateUser,authorizePermissions('admin'),createTopic);
 router.patch("/:id",authenticateUser,authorizePermissions('admin'),updateTopic);
